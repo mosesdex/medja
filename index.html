@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesjia — Run your cleaning company from your phone</title>
+<meta name="description" content="Mesjia is a SaaS for Nigerian cleaning companies: scheduling, digital job cards, staff vetting, naira invoicing and Paystack payments in one Android-first app.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
+:root{
+  --primary:#2563EB; --primary-dark:#1D4ED8; --accent:#059669; --accent-soft:#ECFDF5;
+  --bg:#F8FAFC; --fg:#0F172A; --muted:#64748B; --muted-bg:#F1F5F9;
+  --border:#E2E8F0; --card:#FFFFFF; --amber:#D97706; --amber-soft:#FFFBEB;
+  --radius:16px; --shadow:0 1px 3px rgba(15,23,42,.07),0 6px 20px rgba(15,23,42,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+h1,h2,h3,h4{font-family:'Poppins',sans-serif;line-height:1.25}
+a{color:var(--primary);text-decoration:none}
+img,svg{max-width:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--primary);background:#EFF6FF;border-radius:999px;padding:7px 14px}
+section{padding:64px 0}
+.sechead{max-width:640px;margin-bottom:36px}
+.sechead h2{font-size:clamp(24px,4vw,32px);margin:12px 0 10px}
+.sechead p{color:var(--muted);font-size:15.5px}
+
+/* Header */
+header{position:sticky;top:0;background:rgba(248,250,252,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);z-index:50}
+.navbar{display:flex;align-items:center;gap:22px;padding:14px 0}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Poppins';font-weight:700;font-size:19px;color:var(--fg)}
+.logo{width:36px;height:36px;border-radius:10px;background:var(--primary);color:#fff;display:flex;
+  align-items:center;justify-content:center;font-weight:700;font-size:18px}
+.navlinks{display:flex;gap:20px;margin-left:auto;align-items:center}
+.navlinks a{font-size:13.5px;font-weight:600;color:var(--muted)}
+.navlinks a:hover{color:var(--fg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:12px;
+  font-size:14.5px;font-weight:700;transition:all .15s;cursor:pointer;border:none;font-family:'Open Sans'}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-green{background:var(--accent);color:#fff}
+.btn-green:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn-outline{background:var(--card);border:1.5px solid var(--border);color:var(--fg)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn.sm{padding:9px 16px;font-size:13px}
+
+/* Hero */
+.hero{padding:78px 0 60px;text-align:center}
+.hero h1{font-size:clamp(32px,6vw,52px);font-weight:800;letter-spacing:-.02em;max-width:800px;margin:20px auto 18px}
+.hero h1 em{font-style:normal;color:var(--primary)}
+.hero p{max-width:620px;margin:0 auto 30px;color:var(--muted);font-size:17px}
+.herobtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.herostats{display:flex;gap:0;justify-content:center;margin-top:48px;flex-wrap:wrap}
+.herostats div{padding:0 28px;border-right:1px solid var(--border)}
+.herostats div:last-child{border-right:none}
+.herostats b{display:block;font-family:'Poppins';font-size:22px;color:var(--fg)}
+.herostats span{font-size:12.5px;color:var(--muted);font-weight:600}
+
+/* Cards */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cards2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+.card h3{font-size:16.5px;margin:12px 0 8px}
+.card p{font-size:13.5px;color:var(--muted)}
+.icbox{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center}
+.ic-blue{background:#EFF6FF;color:var(--primary)} .ic-green{background:var(--accent-soft);color:var(--accent)}
+.ic-amber{background:var(--amber-soft);color:var(--amber)}
+
+/* Research strip */
+.research{background:var(--fg);color:#E2E8F0;border-radius:24px;padding:44px 40px;margin:0}
+.research h2{color:#fff;font-size:clamp(22px,3.5vw,28px);margin-bottom:8px}
+.research>p{color:#94A3B8;font-size:14px;max-width:640px}
+.findings{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px}
+.finding{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px 18px;font-size:13.5px}
+.finding b{color:#fff}
+.finding .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.05em;border-radius:999px;
+  padding:3px 9px;background:rgba(52,211,153,.15);color:#34D399;margin-bottom:8px;text-transform:uppercase}
+
+/* Prototypes */
+.proto{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.protocard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:26px;display:flex;flex-direction:column;gap:10px}
+.protocard .frame{border-radius:14px;background:linear-gradient(150deg,#EFF6FF,#DBEAFE);height:190px;display:flex;
+  align-items:center;justify-content:center;margin-bottom:8px;overflow:hidden}
+.protocard.web .frame{background:linear-gradient(150deg,#ECFDF5,#D1FAE5)}
+.protocard h3{font-size:18px}
+.protocard p{font-size:13.5px;color:var(--muted);flex:1}
+
+/* Phases */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.phase{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.phase .num{font-family:'Poppins';font-weight:700;font-size:12px;color:var(--primary);background:#EFF6FF;
+  border-radius:999px;padding:5px 12px;display:inline-block}
+.phase h3{font-size:15.5px;margin:12px 0 8px}
+.phase ul{list-style:none;font-size:12.5px;color:var(--muted)}
+.phase li{padding:4px 0 4px 20px;position:relative}
+.phase li::before{content:'';position:absolute;left:0;top:11px;width:6px;height:6px;border-radius:99px;background:var(--accent)}
+.phase .exit{margin-top:10px;font-size:11.5px;background:var(--accent-soft);color:var(--accent);
+  border-radius:10px;padding:8px 10px;font-weight:600}
+
+/* Pricing */
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+.price{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:26px;display:flex;flex-direction:column}
+.price.hot{border-color:var(--primary);position:relative}
+.price.hot::before{content:'Most popular';position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  background:var(--primary);color:#fff;font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 13px;letter-spacing:.04em}
+.price h3{font-size:16px}
+.price .amt{font-family:'Poppins';font-weight:800;font-size:30px;margin:10px 0 2px}
+.price .amt span{font-size:13px;color:var(--muted);font-weight:600;font-family:'Open Sans'}
+.price ul{list-style:none;margin:16px 0 22px;flex:1}
+.price li{font-size:13px;padding:5px 0 5px 24px;position:relative;color:var(--muted)}
+.price li::before{content:'✓';position:absolute;left:0;color:var(--accent);font-weight:800}
+.pricenote{text-align:center;color:var(--muted);font-size:12.5px;margin-top:16px}
+
+/* Docs */
+.docs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.doc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:20px;display:flex;gap:14px;align-items:center;color:var(--fg)}
+.doc:hover{border-color:var(--primary)}
+.doc b{font-size:14px;font-family:'Poppins';font-weight:600}
+.doc span{display:block;font-size:12px;color:var(--muted)}
+
+footer{border-top:1px solid var(--border);padding:34px 0;color:var(--muted);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+
+@media (max-width:860px){
+  .cards3,.phases,.pricing,.docs{grid-template-columns:1fr 1fr}
+  .findings,.proto,.cards2{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .cards3,.phases,.pricing,.docs{grid-template-columns:1fr}
+  .navlinks a:not(.btn){display:none}
+  section{padding:44px 0}
+  .research{padding:30px 22px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap navbar">
+    <div class="brand"><div class="logo">M</div>Mesjia</div>
+    <nav class="navlinks" aria-label="Site">
+      <a href="#problem">Why</a>
+      <a href="#research">Research</a>
+      <a href="#product">Product</a>
+      <a href="#pricing">Pricing</a>
+      <a class="btn btn-primary sm" href="#prototypes">Try the prototypes</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="hero wrap">
+  <span class="eyebrow">Startup document · July 2026</span>
+  <h1>Run your cleaning company <em>from your phone</em></h1>
+  <p>Mesjia is the operations app for Nigerian cleaning businesses — residential, office and post-construction.
+  Scheduling, digital job cards, vetted staff, naira invoices and Paystack payments. No more paper. No more WhatsApp-group chaos.</p>
+  <div class="herobtns">
+    <a class="btn btn-primary" href="prototype/mesjia-prototype.html">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+      Mobile app prototype</a>
+    <a class="btn btn-outline" href="prototype/mesjia-web-prototype.html">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Web app prototype</a>
+  </div>
+  <div class="herostats">
+    <div><b>₦0</b><span>collectable by Jobber/ZenMaid in Nigeria</span></div>
+    <div><b>~83%</b><span>of Nigerian phones run Android</span></div>
+    <div><b>26</b><span>features across 4 phases</span></div>
+    <div><b>1st</b><span>purpose-built for Nigerian cleaners</span></div>
+  </div>
+</div>
+
+<section id="problem">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow">The problem</span>
+      <h2>Cleaning companies run on paper, calls and WhatsApp groups</h2>
+      <p>Verified research: Nigerian field-service businesses without software coordinate jobs by phone call, schedule staff in WhatsApp groups, and track work on paper job cards. Money leaks everywhere.</p>
+    </div>
+    <div class="cards3">
+      <div class="card">
+        <div class="icbox ic-amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
+        <h3>Paper job cards get lost</h3>
+        <p>No record of what was cleaned, who did it, or what the client agreed to pay. Disputes end in write-offs.</p>
+      </div>
+      <div class="card">
+        <div class="icbox ic-amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></div>
+        <h3>WhatsApp groups aren't a schedule</h3>
+        <p>Who is at which site? Did the 8am team show up? Owners burn hours every day chasing staff by call.</p>
+      </div>
+      <div class="card">
+        <div class="icbox ic-amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></div>
+        <h3>Cash and transfers go untracked</h3>
+        <p>Field-collected cash, unmatched bank transfers, forgotten invoices — and the global tools can't collect naira at all.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="wrap">
+    <div class="research">
+      <h2>Built on verified research, not guesses</h2>
+      <p>We ran a deep, multi-source study of the Nigerian cleaning industry — every claim below survived adversarial fact-checking against primary sources. (Claims that failed — including every published market-size figure — were thrown out.)</p>
+      <div class="findings">
+        <div class="finding"><span class="tag">Verified · payments gap</span><br><b>Jobber, ZenMaid, Housecall Pro and ServiceTitan cannot collect money in Nigeria.</b> No Paystack, no Flutterwave, no naira, no USSD. Mesjia's payment rails are the moat.</div>
+        <div class="finding"><span class="tag">Verified · Android-first</span><br><b>~83% of Nigerian mobile devices run Android</b> (Statcounter, Jun 2026). Mesjia ships as a lightweight, low-data Android PWA for owners and cleaners.</div>
+        <div class="finding"><span class="tag">Verified · trust problem</span><br><b>Hiring trustworthy staff is the #1 recurring struggle</b> for Nigerian cleaning owners. Mesjia builds vetting in: NIN/ID records, guarantors, background-check status, client-facing verified profiles.</div>
+        <div class="finding"><span class="tag">Verified · how firms quote</span><br><b>Residential cleaning is quoted by room count in naira</b> ("2-bed from ₦20k…"). Mesjia's quote builder uses property-type templates with adjustable floors.</div>
+        <div class="finding"><span class="tag">Verified · commercial demand</span><br><b>Offices, malls and government buildings dominate demand</b> and need daily recurring cleaning. Mesjia treats recurring contracts as first-class: auto-scheduled jobs, monthly invoicing.</div>
+        <div class="finding"><span class="tag">Verified · WhatsApp workflows</span><br><b>WhatsApp is the default workspace of African SMEs.</b> Mesjia doesn't fight it — quotes, invoices, reminders and verified-cleaner profiles all send through WhatsApp in one tap.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="prototypes">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow">Prototypes</span>
+      <h2>Click through the product today</h2>
+      <p>Both prototypes are fully clickable — every screen, checklist, check-in and payment flow is mocked with realistic Lagos data.</p>
+    </div>
+    <div class="proto">
+      <a class="protocard" href="prototype/mesjia-prototype.html">
+        <div class="frame">
+          <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/></svg>
+        </div>
+        <h3>Mobile app (PWA)</h3>
+        <p>The owner's phone app and the cleaner's field app in one: dashboard, job cards with checklists and photos, GPS check-in, staff vetting, naira invoices, Paystack + WhatsApp.</p>
+        <span class="btn btn-primary">Open mobile prototype →</span>
+      </a>
+      <a class="protocard web" href="prototype/mesjia-web-prototype.html">
+        <div class="frame">
+          <svg width="82" height="82" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <h3>Web app (desktop dashboard)</h3>
+        <p>The back office for bigger operations: revenue chart, jobs table and week view, invoice management with Paystack reconciliation, staff payroll view, client CRM.</p>
+        <span class="btn btn-green">Open web prototype →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="product" style="background:var(--muted-bg)">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow">The product</span>
+      <h2>26 features, shipped in 4 phases</h2>
+      <p>Each phase is piloted on a real cleaning company before the next begins — the founder's own business runs on Mesjia from Phase 1.</p>
+    </div>
+    <div class="phases">
+      <div class="phase">
+        <span class="num">Phase 1 · Operate</span>
+        <h3>Owner runs the business</h3>
+        <ul><li>Client CRM + sites & access notes</li><li>Job calendar & digital job cards</li><li>3 job types with checklists</li><li>Room-count quote builder (₦)</li><li>Invoices + WhatsApp share</li><li>Owner dashboard</li></ul>
+        <div class="exit">Exit: a real week scheduled & invoiced in Mesjia</div>
+      </div>
+      <div class="phase">
+        <span class="num">Phase 2 · Field</span>
+        <h3>Cleaners on the app</h3>
+        <ul><li>Cleaner "My Jobs" view</li><li>GPS check-in / check-out</li><li>Before & after photos</li><li>On-site checklist ticking</li><li>Staff vetting: ID + guarantor</li><li>Verified-cleaner client share</li></ul>
+        <div class="exit">Exit: a job completed end-to-end on a cleaner's phone</div>
+      </div>
+      <div class="phase">
+        <span class="num">Phase 3 · Money</span>
+        <h3>Payments that fit Nigeria</h3>
+        <ul><li>Paystack links: card · transfer · USSD</li><li>Field cash logging + confirm</li><li>Deposits & part-payments</li><li>Auto payment reminders</li><li>Recurring contracts → auto jobs</li><li>Transfer auto-reconciliation</li></ul>
+        <div class="exit">Exit: a client pays a Mesjia invoice via Paystack</div>
+      </div>
+      <div class="phase">
+        <span class="num">Phase 4 · Scale</span>
+        <h3>Grow beyond one company</h3>
+        <ul><li>Attendance & payroll runs</li><li>Public booking link</li><li>Client ratings & reports</li><li>Multi-site rollups</li><li>WhatsApp Business API</li><li>SaaS billing & plan limits</li></ul>
+        <div class="exit">Exit: a second company onboards self-serve, paid</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow">Pricing hypothesis</span>
+      <h2>Naira pricing, billed through Paystack</h2>
+      <p>To be validated with pilot companies — global tools charge $19–$79/month in dollars, which doesn't work here.</p>
+    </div>
+    <div class="pricing">
+      <div class="price">
+        <h3>Starter</h3>
+        <div class="amt">₦15,000<span>/month</span></div>
+        <ul><li>1 owner + up to 5 staff</li><li>Jobs, quotes & invoices</li><li>Paystack payment links</li><li>WhatsApp sharing</li><li>Staff vetting records</li></ul>
+        <span class="btn btn-outline">For new companies</span>
+      </div>
+      <div class="price hot">
+        <h3>Growth</h3>
+        <div class="amt">₦35,000<span>/month</span></div>
+        <ul><li>Up to 20 staff</li><li>Everything in Starter</li><li>Recurring contracts & auto-invoicing</li><li>GPS check-in & photo proof</li><li>Payroll computation</li><li>Transfer auto-reconciliation</li></ul>
+        <span class="btn btn-primary">For growing operations</span>
+      </div>
+      <div class="price">
+        <h3>Pro</h3>
+        <div class="amt">₦75,000<span>/month</span></div>
+        <ul><li>Unlimited staff</li><li>Everything in Growth</li><li>Multi-site client rollups</li><li>Reports & analytics</li><li>WhatsApp Business API</li><li>Priority support</li></ul>
+        <span class="btn btn-outline">For facility managers</span>
+      </div>
+    </div>
+    <p class="pricenote">All plans: 14-day free trial · cancel anytime · prices reviewed with pilot feedback</p>
+  </div>
+</section>
+
+<section id="docsec" style="padding-top:0">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow">Read the docs</span>
+      <h2>The full startup document set</h2>
+    </div>
+    <div class="docs">
+      <a class="doc" href="docs/research-nigeria-cleaning-saas.md">
+        <div class="icbox ic-blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+        <div><b>Research report</b><span>Verified market findings + 40 features</span></div>
+      </a>
+      <a class="doc" href="docs/superpowers/specs/2026-07-11-mesjia-saas-design.md">
+        <div class="icbox ic-blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+        <div><b>Design spec</b><span>Architecture, data model, decisions</span></div>
+      </a>
+      <a class="doc" href="docs/roadmap.md">
+        <div class="icbox ic-blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg></div>
+        <div><b>Roadmap</b><span>4 phases with real-world exit tests</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="brand" style="font-size:15px"><div class="logo" style="width:28px;height:28px;font-size:14px;border-radius:8px">M</div>Mesjia</div>
+    <div>Startup document & prototypes · July 2026 · Built for the Nigerian cleaning industry</div>
+  </div>
+</footer>
+
+</body>
+</html>

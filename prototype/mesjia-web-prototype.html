@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesjia — Web App Prototype</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+:root{
+  --primary:#2563EB; --accent:#059669; --accent-soft:#ECFDF5;
+  --bg:#F8FAFC; --fg:#0F172A; --muted:#64748B; --muted-bg:#F1F5F9;
+  --border:#E2E8F0; --card:#FFFFFF; --destructive:#DC2626;
+  --amber:#D97706; --amber-soft:#FFFBEB;
+  --radius:14px; --shadow:0 1px 3px rgba(15,23,42,.07),0 4px 14px rgba(15,23,42,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Open Sans',system-ui,sans-serif;background:var(--bg);color:var(--fg);min-height:100dvh;display:flex}
+h1,h2,h3,h4{font-family:'Poppins',sans-serif}
+button{font-family:inherit;cursor:pointer;border:none;background:none;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--primary);outline-offset:2px;border-radius:8px}
+table{border-collapse:collapse;width:100%}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;padding:10px 12px;border-bottom:1.5px solid var(--border)}
+td{padding:13px 12px;font-size:13.5px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--muted-bg)}
+.money{font-variant-numeric:tabular-nums;font-weight:600}
+
+/* Sidebar */
+.side{width:236px;background:var(--card);border-right:1px solid var(--border);padding:20px 14px;
+  display:flex;flex-direction:column;gap:4px;flex:none;position:sticky;top:0;height:100dvh}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px}
+.logo{width:38px;height:38px;border-radius:11px;background:var(--primary);color:#fff;display:flex;
+  align-items:center;justify-content:center;font-family:'Poppins';font-weight:700;font-size:19px}
+.brand b{font-family:'Poppins';font-size:17px}
+.brand span{display:block;font-size:10.5px;color:var(--muted);font-weight:600}
+.side nav{display:flex;flex-direction:column;gap:3px;flex:1}
+.side nav button{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:11px;
+  font-size:13.5px;font-weight:600;color:var(--muted);width:100%;text-align:left}
+.side nav button:hover{background:var(--muted-bg);color:var(--fg)}
+.side nav button.on{background:#EFF6FF;color:var(--primary)}
+.sideplan{background:var(--muted-bg);border-radius:12px;padding:12px;font-size:11.5px;color:var(--muted);line-height:1.5}
+.sideplan b{color:var(--fg)}
+
+/* Main */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:14px;padding:14px 26px;background:var(--card);
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+.search{flex:1;max-width:420px;display:flex;align-items:center;gap:9px;background:var(--muted-bg);
+  border-radius:11px;padding:10px 13px;color:var(--muted);font-size:13px}
+.topbar .grow{flex:1}
+.pill{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:600}
+.avatar{width:36px;height:36px;border-radius:11px;background:var(--primary);color:#fff;display:flex;
+  align-items:center;justify-content:center;font-family:'Poppins';font-weight:700;font-size:13px}
+.content{padding:24px 26px;max-width:1200px;width:100%;margin:0 auto}
+.screen{display:none}.screen.active{display:block}
+.pagehead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.pagehead h1{font-size:21px}
+.pagehead .sub{font-size:13px;color:var(--muted);margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:11px;
+  font-size:13.5px;font-weight:700;transition:filter .15s}
+.btn:active{filter:brightness(.92)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-outline{background:var(--card);border:1.5px solid var(--border);color:var(--fg)}
+
+/* Cards / tiles */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.tilerow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.tile{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+.tile .l{font-size:12px;color:var(--muted);font-weight:600}
+.tile .n{font-family:'Poppins';font-weight:700;font-size:24px;margin-top:5px;font-variant-numeric:tabular-nums}
+.tile .d{font-size:11.5px;margin-top:5px;font-weight:600;color:var(--muted)}
+.tile .d.up{color:var(--accent)} .tile .d.warn{color:var(--amber)}
+.grid2{display:grid;grid-template-columns:1fr 340px;gap:14px;align-items:start}
+.cardhead{display:flex;align-items:baseline;justify-content:space-between;padding:16px 16px 4px}
+.cardhead h3{font-size:14.5px}
+.cardhead .act{font-size:12.5px;color:var(--primary);font-weight:700}
+.cardbody{padding:12px 16px 16px}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;border-radius:999px;padding:3.5px 9px;white-space:nowrap}
+.b-res{background:#EFF6FF;color:var(--primary)} .b-com{background:#F5F3FF;color:#7C3AED}
+.b-post{background:var(--amber-soft);color:var(--amber)}
+.b-done,.b-paid,.b-verified{background:var(--accent-soft);color:var(--accent)}
+.b-prog,.b-pending{background:var(--amber-soft);color:var(--amber)}
+.b-booked{background:var(--muted-bg);color:var(--muted)}
+.b-unpaid{background:#FEF2F2;color:var(--destructive)}
+.dot{width:7px;height:7px;border-radius:99px;display:inline-block}
+
+/* Chart */
+.chart{padding:10px 16px 8px;position:relative}
+.chart .plot{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;align-items:end;height:190px;
+  border-bottom:1.5px solid var(--border);position:relative}
+.chart .grid{position:absolute;left:0;right:0;border-top:1px dashed #EDF2F7;font-size:10px;color:#B6C2D4;
+  text-align:right;padding-right:2px;line-height:0;pointer-events:none}
+.bar{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.bar i{display:block;width:34px;background:var(--primary);border-radius:4px 4px 0 0;min-height:6px;
+  transition:filter .12s;cursor:pointer}
+.bar:hover i{filter:brightness(1.12)}
+.bar .lab{position:absolute;top:-22px;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--fg);white-space:nowrap}
+.bar .tip{position:absolute;bottom:calc(100% + 8px);background:var(--fg);color:#fff;font-size:11.5px;font-weight:600;
+  border-radius:8px;padding:6px 10px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s;z-index:5}
+.bar:hover .tip{opacity:1}
+.chart .months{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;margin-top:8px}
+.chart .months span{text-align:center;font-size:11.5px;color:var(--muted);font-weight:600}
+
+.listrow{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--border)}
+.listrow:last-child{border-bottom:none}
+.listrow .t{font-weight:700;font-size:13px}
+.listrow .s{font-size:11.5px;color:var(--muted);margin-top:1px}
+.pavatar{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins';font-weight:700;font-size:13px;color:#fff;flex:none}
+.a1{background:#2563EB}.a2{background:#7C3AED}.a3{background:#059669}.a4{background:#D97706}
+
+/* Week strip (jobs) */
+.weekstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+.day{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:10px 0 8px;text-align:center}
+.day .dw{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.day .dn{font-family:'Poppins';font-weight:600;font-size:16px;margin-top:1px}
+.day .c{font-size:10.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.day.sel{background:var(--primary);border-color:var(--primary);color:#fff}
+.day.sel .dw,.day.sel .c{color:#BFDBFE}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(8px);bottom:26px;background:var(--fg);color:#fff;
+  border-radius:12px;padding:13px 18px;font-size:13.5px;font-weight:600;display:flex;gap:9px;align-items:center;
+  z-index:100;opacity:0;pointer-events:none;transition:all .25s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.note{font-size:11.5px;color:var(--muted)}
+svg{flex:none}
+@media (max-width:900px){.side{display:none}.tilerow{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-palette="#2563EB,#059669">
+
+<aside class="side">
+  <div class="brand">
+    <div class="logo">M</div>
+    <div><b>Mesjia</b><span>SparkleClean Services Ltd</span></div>
+  </div>
+  <nav aria-label="Main">
+    <button class="on" data-s="dash" onclick="go('dash',this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Dashboard</button>
+    <button data-s="jobs" onclick="go('jobs',this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Jobs</button>
+    <button data-s="money" onclick="go('money',this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
+      Money</button>
+    <button data-s="staff" onclick="go('staff',this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Staff</button>
+    <button data-s="clients" onclick="go('clients',this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+      Clients</button>
+    <button onclick="toast('Reports: revenue by service type, staff utilization, churn — Phase 4')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+      Reports</button>
+    <button onclick="toast('Settings: company profile, quote templates, plan & billing')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+      Settings</button>
+  </nav>
+  <div class="sideplan"><b>Growth plan</b> · ₦35,000/mo<br>9 of 20 staff seats used<br><span style="color:var(--accent);font-weight:700">Billed via Paystack ✓</span></div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Search clients, jobs, invoices…
+    </div>
+    <div class="grow"></div>
+    <div class="pill"><span class="dot" style="background:var(--accent)"></span>Fri 11 Jul 2026</div>
+    <button class="pill" onclick="toast('Notifications: 3 overdue invoices, 1 vetting task, 2 unconfirmed cash payments')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      6</button>
+    <div class="avatar">DX</div>
+  </div>
+
+  <div class="content">
+
+    <!-- ============ DASHBOARD ============ -->
+    <section class="screen active" id="dash">
+      <div class="pagehead">
+        <div><h1>Good morning, Dex</h1><div class="sub">Here's SparkleClean today — Friday 11 July</div></div>
+        <button class="btn btn-primary" onclick="toast('New job: pick client, job type, quote template, team')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          New job</button>
+      </div>
+
+      <div class="tilerow">
+        <div class="tile"><div class="l">Jobs today</div><div class="n">7</div><div class="d">5 teams dispatched</div></div>
+        <div class="tile"><div class="l">Collected today</div><div class="n" style="color:var(--accent)">₦86,500</div><div class="d up">↑ 2 Paystack · 1 cash</div></div>
+        <div class="tile"><div class="l">Outstanding</div><div class="n" style="color:var(--amber)">₦342,000</div><div class="d warn">3 invoices overdue</div></div>
+        <div class="tile"><div class="l">Active contracts</div><div class="n">12</div><div class="d">₦1.86M / month recurring</div></div>
+      </div>
+
+      <div class="grid2">
+        <div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="cardhead"><h3>Revenue collected — last 6 months</h3><span class="note">₦ thousands</span></div>
+            <div class="chart">
+              <div class="plot">
+                <div class="grid" style="bottom:158px">1,200</div>
+                <div class="grid" style="bottom:79px">600</div>
+                <div class="bar"><span class="tip">February · ₦640,000</span><i style="height:101px"></i></div>
+                <div class="bar"><span class="tip">March · ₦720,000</span><i style="height:114px"></i></div>
+                <div class="bar"><span class="tip">April · ₦810,000</span><i style="height:128px"></i></div>
+                <div class="bar"><span class="tip">May · ₦890,000</span><i style="height:141px"></i></div>
+                <div class="bar"><span class="tip">June · ₦1,020,000</span><i style="height:161px"></i></div>
+                <div class="bar"><span class="lab">₦1.24M</span><span class="tip">July (to date) · ₦1,240,000</span><i style="height:190px"></i></div>
+              </div>
+              <div class="months"><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardhead"><h3>Today's jobs</h3><button class="act" onclick="go('jobs')">Open calendar</button></div>
+            <div class="cardbody" style="padding-top:2px;overflow-x:auto">
+              <table>
+                <thead><tr><th>Time</th><th>Client & job</th><th>Type</th><th>Team</th><th>Status</th><th style="text-align:right">Value</th></tr></thead>
+                <tbody>
+                  <tr onclick="toast('Job card #J-0247 opens — checklist 4/7, GPS checked in 8:04 AM')">
+                    <td class="money">8:00 AM</td><td><b>Mrs. Adebayo</b> — duplex deep clean</td>
+                    <td><span class="badge b-res">Residential</span></td><td>Team A (3)</td>
+                    <td><span class="badge b-prog">In progress</span></td><td class="money" style="text-align:right">₦55,000</td></tr>
+                  <tr onclick="toast('Job card #J-0248 opens — recurring from Halogen contract')">
+                    <td class="money">11:30 AM</td><td><b>Halogen HQ</b> — daily office clean</td>
+                    <td><span class="badge b-com">Commercial</span></td><td>Team B (4)</td>
+                    <td><span class="badge b-booked">Booked</span></td><td class="money" style="text-align:right">contract</td></tr>
+                  <tr onclick="toast('Job card #J-0249 opens — post-construction, 6 flats')">
+                    <td class="money">2:00 PM</td><td><b>Emerald Court</b> — post-construction</td>
+                    <td><span class="badge b-post">Post-const.</span></td><td>Team A (3)</td>
+                    <td><span class="badge b-booked">Booked</span></td><td class="money" style="text-align:right">₦240,000</td></tr>
+                  <tr onclick="toast('Job card #J-0250 opens')">
+                    <td class="money">4:30 PM</td><td><b>Mr. Eze</b> — 2-bed standard clean</td>
+                    <td><span class="badge b-res">Residential</span></td><td>Blessing</td>
+                    <td><span class="badge b-booked">Booked</span></td><td class="money" style="text-align:right">₦22,000</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="cardhead"><h3>Needs attention</h3></div>
+            <div class="cardbody">
+              <div class="listrow">
+                <span class="dot" style="background:var(--destructive)"></span>
+                <div style="flex:1"><div class="t">Zenith Towers — ₦220,000</div><div class="s">Invoice 12 days overdue</div></div>
+                <button class="act" style="color:var(--primary);font-weight:700;font-size:12px" onclick="toast('WhatsApp reminder pre-filled with Paystack link')">Remind</button>
+              </div>
+              <div class="listrow">
+                <span class="dot" style="background:var(--amber)"></span>
+                <div style="flex:1"><div class="t">Cash ₦22,000 — Mr. Eze</div><div class="s">Collected by Blessing · confirm</div></div>
+                <button class="act" style="color:var(--accent);font-weight:700;font-size:12px" onclick="toast('Cash confirmed and reconciled to INV-0196')">Confirm</button>
+              </div>
+              <div class="listrow">
+                <span class="dot" style="background:var(--amber)"></span>
+                <div style="flex:1"><div class="t">Funke Balogun — vetting</div><div class="s">Guarantor form still pending</div></div>
+                <button class="act" style="color:var(--primary);font-weight:700;font-size:12px" onclick="go('staff')">Open</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardhead"><h3>Staff on duty</h3><button class="act" onclick="go('staff')">All staff</button></div>
+            <div class="cardbody">
+              <div class="listrow"><div class="pavatar a1">CO</div>
+                <div style="flex:1"><div class="t">Chidinma Okafor</div><div class="s">Checked in 8:04 · Lekki Ph. 1</div></div>
+                <span class="badge b-verified">GPS ✓</span></div>
+              <div class="listrow"><div class="pavatar a3">BA</div>
+                <div style="flex:1"><div class="t">Blessing Adeyemi</div><div class="s">Checked in 8:04 · Lekki Ph. 1</div></div>
+                <span class="badge b-verified">GPS ✓</span></div>
+              <div class="listrow"><div class="pavatar a2">IM</div>
+                <div style="flex:1"><div class="t">Ibrahim Musa</div><div class="s">Checked in 8:06 · Lekki Ph. 1</div></div>
+                <span class="badge b-verified">GPS ✓</span></div>
+              <div class="listrow"><div class="pavatar a4">FE</div>
+                <div style="flex:1"><div class="t">Funke Balogun</div><div class="s">Not yet checked in</div></div>
+                <span class="badge b-pending">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ JOBS ============ -->
+    <section class="screen" id="jobs">
+      <div class="pagehead">
+        <div><h1>Jobs</h1><div class="sub">Week of 7–13 July · 31 jobs scheduled</div></div>
+        <div style="display:flex;gap:9px">
+          <button class="btn btn-outline" onclick="toast('Filters: job type, team, status, client')">Filter</button>
+          <button class="btn btn-primary" onclick="toast('New job: pick client, type, quote template, team')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New job</button>
+        </div>
+      </div>
+
+      <div class="weekstrip">
+        <div class="day"><div class="dw">Mon</div><div class="dn">7</div><div class="c">5 jobs</div></div>
+        <div class="day"><div class="dw">Tue</div><div class="dn">8</div><div class="c">6 jobs</div></div>
+        <div class="day"><div class="dw">Wed</div><div class="dn">9</div><div class="c">4 jobs</div></div>
+        <div class="day"><div class="dw">Thu</div><div class="dn">10</div><div class="c">5 jobs</div></div>
+        <div class="day sel"><div class="dw">Fri</div><div class="dn">11</div><div class="c">7 jobs</div></div>
+        <div class="day"><div class="dw">Sat</div><div class="dn">12</div><div class="c">4 jobs</div></div>
+        <div class="day"><div class="dw">Sun</div><div class="dn">13</div><div class="c">—</div></div>
+      </div>
+
+      <div class="card">
+        <div class="cardhead"><h3>Friday 11 July</h3><span class="note">Recurring jobs auto-generated from 12 active contracts</span></div>
+        <div class="cardbody" style="padding-top:2px;overflow-x:auto">
+          <table>
+            <thead><tr><th>Time</th><th>Client & job</th><th>Location</th><th>Type</th><th>Team</th><th>Status</th><th style="text-align:right">Value</th></tr></thead>
+            <tbody>
+              <tr onclick="toast('Job card #J-0247')"><td class="money">8:00</td><td><b>Mrs. Adebayo</b> — deep clean</td><td>Lekki Phase 1</td><td><span class="badge b-res">Residential</span></td><td>Team A</td><td><span class="badge b-prog">In progress</span></td><td class="money" style="text-align:right">₦55,000</td></tr>
+              <tr onclick="toast('Job card #J-0248')"><td class="money">11:30</td><td><b>Halogen HQ</b> — daily clean</td><td>Victoria Island</td><td><span class="badge b-com">Commercial</span></td><td>Team B</td><td><span class="badge b-booked">Booked</span></td><td class="money" style="text-align:right">contract</td></tr>
+              <tr onclick="toast('Job card #J-0249')"><td class="money">14:00</td><td><b>Emerald Court</b> — post-construction</td><td>Ikeja GRA</td><td><span class="badge b-post">Post-const.</span></td><td>Team A</td><td><span class="badge b-booked">Booked</span></td><td class="money" style="text-align:right">₦240,000</td></tr>
+              <tr onclick="toast('Job card #J-0250')"><td class="money">16:30</td><td><b>Mr. Eze</b> — 2-bed standard</td><td>Yaba</td><td><span class="badge b-res">Residential</span></td><td>Blessing</td><td><span class="badge b-booked">Booked</span></td><td class="money" style="text-align:right">₦22,000</td></tr>
+              <tr onclick="toast('Job card #J-0251 — daily contract clean')"><td class="money">17:00</td><td><b>Zenith Towers</b> — evening clean</td><td>Marina</td><td><span class="badge b-com">Commercial</span></td><td>Team C</td><td><span class="badge b-booked">Booked</span></td><td class="money" style="text-align:right">contract</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MONEY ============ -->
+    <section class="screen" id="money">
+      <div class="pagehead">
+        <div><h1>Money</h1><div class="sub">July: ₦1.24M collected · ₦342k outstanding · ₦187k expenses</div></div>
+        <button class="btn btn-primary" onclick="toast('New quote: room-count template, adjust, send via WhatsApp')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New quote</button>
+      </div>
+
+      <div class="card" style="margin-bottom:14px">
+        <div class="cardhead"><h3>Invoices</h3><span class="note">Paystack links: card · transfer · USSD — auto-reconciled by webhook</span></div>
+        <div class="cardbody" style="padding-top:2px;overflow-x:auto">
+          <table>
+            <thead><tr><th>Invoice</th><th>Client</th><th>Due</th><th>Method</th><th>Status</th><th style="text-align:right">Amount</th><th></th></tr></thead>
+            <tbody>
+              <tr onclick="toast('INV-0198 — balance ₦39,125 after ₦20,000 deposit')">
+                <td class="money">INV-0198</td><td><b>Mrs. Adebayo</b></td><td>Today</td><td>Paystack link</td>
+                <td><span class="badge b-unpaid">Balance due</span></td><td class="money" style="text-align:right">₦39,125</td>
+                <td><button class="act" style="color:var(--accent);font-weight:700;font-size:12px" onclick="event.stopPropagation();toast('WhatsApp opens: invoice + Paystack link to Mrs. Adebayo')">Send</button></td></tr>
+              <tr onclick="toast('INV-0195 — 12 days overdue')">
+                <td class="money">INV-0195</td><td><b>Zenith Towers</b></td><td style="color:var(--destructive);font-weight:700">12 days ago</td><td>Bank transfer</td>
+                <td><span class="badge b-unpaid">Overdue</span></td><td class="money" style="text-align:right">₦220,000</td>
+                <td><button class="act" style="color:var(--primary);font-weight:700;font-size:12px" onclick="event.stopPropagation();toast('Reminder sent via WhatsApp with payment link')">Remind</button></td></tr>
+              <tr onclick="toast('INV-0197 — paid, matched to virtual account transfer automatically')">
+                <td class="money">INV-0197</td><td><b>Halogen HQ</b></td><td>—</td><td>Transfer · auto-matched</td>
+                <td><span class="badge b-paid">Paid</span></td><td class="money" style="text-align:right">₦180,000</td><td></td></tr>
+              <tr onclick="toast('INV-0196 — cash collected on site, awaiting owner confirmation')">
+                <td class="money">INV-0196</td><td><b>Mr. Eze</b></td><td>—</td><td>Cash (field)</td>
+                <td><span class="badge b-pending">Confirm cash</span></td><td class="money" style="text-align:right">₦22,000</td>
+                <td><button class="act" style="color:var(--accent);font-weight:700;font-size:12px" onclick="event.stopPropagation();toast('Cash confirmed — reconciled')">Confirm</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="cardhead"><h3>Quote templates (naira floors)</h3><button class="act" onclick="toast('Edit template floors — perishable under inflation, review quarterly')">Edit</button></div>
+          <div class="cardbody" style="padding-top:2px">
+            <table>
+              <tbody>
+                <tr><td>Single room + toilet</td><td class="money" style="text-align:right">from ₦12,000</td></tr>
+                <tr><td>2-bedroom apartment</td><td class="money" style="text-align:right">from ₦22,000</td></tr>
+                <tr><td>3-bedroom apartment</td><td class="money" style="text-align:right">from ₦32,000</td></tr>
+                <tr><td>4-bedroom duplex</td><td class="money" style="text-align:right">from ₦55,000</td></tr>
+                <tr><td>Office — monthly contract</td><td class="money" style="text-align:right">custom / m²</td></tr>
+                <tr><td>Post-construction</td><td class="money" style="text-align:right">site visit + quote</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="cardhead"><h3>Recurring contracts</h3></div>
+          <div class="cardbody">
+            <div class="listrow"><div style="flex:1"><div class="t">Halogen HQ</div><div class="s">Mon–Fri daily · invoices 1st monthly</div></div><span class="money">₦180k/mo</span></div>
+            <div class="listrow"><div style="flex:1"><div class="t">Zenith Towers</div><div class="s">Mon–Sat evenings · invoices 1st</div></div><span class="money">₦220k/mo</span></div>
+            <div class="listrow"><div style="flex:1"><div class="t">Ocean Mall</div><div class="s">Daily incl. Sun · invoices 1st</div></div><span class="money">₦450k/mo</span></div>
+            <div class="listrow"><div style="flex:1"><div class="t">+ 9 more</div><div class="s">Total recurring</div></div><span class="money" style="color:var(--accent)">₦1.86M/mo</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STAFF ============ -->
+    <section class="screen" id="staff">
+      <div class="pagehead">
+        <div><h1>Staff</h1><div class="sub">9 staff · 8 vetted · payroll runs 31 July</div></div>
+        <button class="btn btn-primary" onclick="toast('Add staff: photo, NIN/ID upload, guarantor details, background check tracker')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add staff</button>
+      </div>
+      <div class="card">
+        <div class="cardbody" style="padding-top:8px;overflow-x:auto">
+          <table>
+            <thead><tr><th>Staff</th><th>Role</th><th>Vetting</th><th>Jobs</th><th>Rating</th><th>On-time</th><th style="text-align:right">July pay (due)</th></tr></thead>
+            <tbody>
+              <tr onclick="toast('Profile: NIN verified, guarantor Mr. Emeka Okafor, background check cleared Feb 2025')">
+                <td><div style="display:flex;gap:10px;align-items:center"><div class="pavatar a1">CO</div><b>Chidinma Okafor</b></div></td>
+                <td>Team A lead</td><td><span class="badge b-verified">Vetted ✓</span></td><td>142</td><td>★ 4.9</td><td>98%</td><td class="money" style="text-align:right">₦171,000</td></tr>
+              <tr onclick="toast('Profile: Blessing Adeyemi — vetted, guarantor on file')">
+                <td><div style="display:flex;gap:10px;align-items:center"><div class="pavatar a3">BA</div><b>Blessing Adeyemi</b></div></td>
+                <td>Cleaner</td><td><span class="badge b-verified">Vetted ✓</span></td><td>98</td><td>★ 4.8</td><td>96%</td><td class="money" style="text-align:right">₦126,000</td></tr>
+              <tr onclick="toast('Profile: Ibrahim Musa — vetted, guarantor on file')">
+                <td><div style="display:flex;gap:10px;align-items:center"><div class="pavatar a2">IM</div><b>Ibrahim Musa</b></div></td>
+                <td>Cleaner</td><td><span class="badge b-verified">Vetted ✓</span></td><td>76</td><td>★ 4.7</td><td>94%</td><td class="money" style="text-align:right">₦117,000</td></tr>
+              <tr onclick="toast('Vetting checklist: photo ✓, NIN ✓, guarantor form PENDING, background check PENDING')">
+                <td><div style="display:flex;gap:10px;align-items:center"><div class="pavatar a4">FE</div><b>Funke Balogun</b></div></td>
+                <td>New hire</td><td><span class="badge b-pending">2 items pending</span></td><td>4</td><td>—</td><td>—</td><td class="money" style="text-align:right">₦18,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="cardbody" style="display:flex;gap:12px;align-items:center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+          <div style="flex:1;font-size:13px"><b>Verified-cleaner profiles.</b> <span style="color:var(--muted)">Before each visit the client receives the cleaner's photo, first name and vetting badge on WhatsApp — the #1 trust concern in the Nigerian market, solved in one tap.</span></div>
+          <button class="btn btn-outline" onclick="toast('Preview of the WhatsApp verified-profile card')">Preview</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CLIENTS ============ -->
+    <section class="screen" id="clients">
+      <div class="pagehead">
+        <div><h1>Clients</h1><div class="sub">48 clients · 12 on recurring contracts</div></div>
+        <button class="btn btn-primary" onclick="toast('New client: contact, property/site details, access notes')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New client</button>
+      </div>
+      <div class="card">
+        <div class="cardbody" style="padding-top:8px;overflow-x:auto">
+          <table>
+            <thead><tr><th>Client</th><th>Sites</th><th>Type</th><th>Last job</th><th>Lifetime value</th><th></th></tr></thead>
+            <tbody>
+              <tr onclick="toast('Client: full history, 2 sites, access notes, all invoices')">
+                <td><b>Halogen HQ</b></td><td>2 (VI, Ikoyi)</td><td><span class="badge b-com">Contract</span></td><td>Today</td><td class="money">₦2,160,000</td>
+                <td><button class="act" style="color:var(--primary);font-weight:700;font-size:12px" onclick="event.stopPropagation();toast('WhatsApp thread with Halogen facilities manager')">WhatsApp</button></td></tr>
+              <tr onclick="toast('Client: Mrs. Adebayo — 4-bed duplex, gateman Sunday, prefers Team A')">
+                <td><b>Mrs. Adebayo</b></td><td>1 (Lekki Ph. 1)</td><td><span class="badge b-res">Repeat</span></td><td>In progress</td><td class="money">₦385,000</td>
+                <td><button class="act" style="color:var(--primary);font-weight:700;font-size:12px" onclick="event.stopPropagation();toast('WhatsApp chat with Mrs. Adebayo')">WhatsApp</button></td></tr>
+              <tr onclick="toast('Client: Emerald Court developer — 3 past post-construction jobs')">
+                <td><b>Emerald Court (Dev.)</b></td><td>1 (Ikeja GRA)</td><td><span class="badge b-post">Post-const.</span></td><td>Today</td><td class="money">₦690,000</td>
+                <td><button class="act" style="color:var(--primary);font-weight:700;font-size:12px" onclick="event.stopPropagation();toast('WhatsApp chat')">WhatsApp</button></td></tr>
+              <tr onclick="toast('Client: Ocean Mall — biggest contract, daily cleaning')">
+                <td><b>Ocean Mall</b></td><td>1 (Lekki)</td><td><span class="badge b-com">Contract</span></td><td>Yesterday</td><td class="money">₦5,400,000</td>
+                <td><button class="act" style="color:var(--primary);font-weight:700;font-size:12px" onclick="event.stopPropagation();toast('WhatsApp thread')">WhatsApp</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="toast" id="toastEl" role="status" aria-live="polite"></div>
+
+<script>
+function go(id,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.side nav button[data-s]').forEach(b=>b.classList.toggle('on',b.dataset.s===id));
+  window.scrollTo({top:0});
+}
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById('toastEl');
+  t.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'+msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+</script>
+</body>
+</html>
