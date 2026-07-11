@@ -1,6 +1,6 @@
-# Mesjia
+# Medja
 
-**Run your cleaning company from your phone.** Mesjia is a multi-tenant SaaS for Nigerian cleaning companies — residential, office/commercial, and post-construction — replacing paper job cards, WhatsApp-group scheduling, and untracked cash with one Android-first PWA.
+**Run your cleaning company from your phone.** Medja is a multi-tenant SaaS for Nigerian cleaning companies — residential, office/commercial, and post-construction — replacing paper job cards, WhatsApp-group scheduling, and untracked cash with one Android-first PWA.
 
 ## Why it wins
 
@@ -13,9 +13,9 @@
 | Doc | What's in it |
 |---|---|
 | [Research report](docs/research-nigeria-cleaning-saas.md) | Verified market findings + 40 prioritized features |
-| [Design spec](docs/superpowers/specs/2026-07-11-mesjia-saas-design.md) | Architecture, data model, phases, decisions & flagged defaults |
+| [Design spec](docs/superpowers/specs/2026-07-11-medja-saas-design.md) | Architecture, data model, phases, decisions & flagged defaults |
 | [Roadmap](docs/roadmap.md) | Phase-by-phase delivery plan |
-| [Mobile prototype](prototype/mesjia-prototype.html) | Clickable mock of the key screens |
+| [Mobile prototype](prototype/medja-prototype.html) | Clickable mock of the key screens |
 
 ## Stack (planned)
 

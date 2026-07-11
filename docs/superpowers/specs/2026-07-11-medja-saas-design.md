@@ -1,11 +1,11 @@
-# Mesjia — Design Spec
+# Medja — Design Spec
 
 *Date: 2026-07-11 · Status: draft for founder review*
 *Grounding research: [docs/research-nigeria-cleaning-saas.md](../../research-nigeria-cleaning-saas.md)*
 
-## 1. What Mesjia is
+## 1. What Medja is
 
-Mesjia is a multi-tenant SaaS that lets Nigerian cleaning-company owners run their whole operation — clients, jobs, field staff, quotes, invoices, and payments — from an Android phone. It replaces the WhatsApp-group + paper-job-card + phone-call workflow with a single app, and it collects money through Nigerian rails (Paystack: card, bank transfer, USSD), which no global competitor does.
+Medja is a multi-tenant SaaS that lets Nigerian cleaning-company owners run their whole operation — clients, jobs, field staff, quotes, invoices, and payments — from an Android phone. It replaces the WhatsApp-group + paper-job-card + phone-call workflow with a single app, and it collects money through Nigerian rails (Paystack: card, bank transfer, USSD), which no global competitor does.
 
 **First users:** the founder's own cleaning company plus other owners the founder can reach — so multi-tenant from day one, validated on a real business immediately.
 
@@ -87,7 +87,7 @@ Native Android/iOS apps · full offline-first sync · Flutterwave · WhatsApp Bu
 
 ## 10. Success criteria
 
-1. Founder's company runs a full week — every job, quote, invoice — inside Mesjia (no paper, no scheduling in WhatsApp groups).
-2. At least one payment collected via a Mesjia Paystack link.
+1. Founder's company runs a full week — every job, quote, invoice — inside Medja (no paper, no scheduling in WhatsApp groups).
+2. At least one payment collected via a Medja Paystack link.
 3. A second company onboards without a code change.
 4. Cleaner app usable on a low-end Android over 3G: first load < 3s on repeat visits, job completion possible with photos.
