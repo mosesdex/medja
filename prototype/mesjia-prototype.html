@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesjia — Mobile Prototype</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+
+:root{
+  --primary:#2563EB; --on-primary:#FFFFFF; --secondary:#3B82F6;
+  --accent:#059669; --accent-soft:#ECFDF5;
+  --bg:#F8FAFC; --fg:#0F172A; --muted:#64748B; --muted-bg:#F1F5F9;
+  --border:#E2E8F0; --card:#FFFFFF; --destructive:#DC2626;
+  --amber:#D97706; --amber-soft:#FFFBEB;
+  --radius:14px; --shadow:0 1px 3px rgba(15,23,42,.08),0 4px 12px rgba(15,23,42,.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Open Sans',system-ui,sans-serif;background:#CBD5E1;color:var(--fg);
+  display:flex;align-items:center;justify-content:center;min-height:100dvh;padding:24px;}
+h1,h2,h3,h4{font-family:'Poppins',sans-serif}
+button{font-family:inherit;cursor:pointer;border:none;background:none;-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible{outline:3px solid var(--primary);outline-offset:2px;border-radius:8px}
+
+/* Phone frame */
+.phone{width:390px;max-width:100%;height:820px;max-height:96dvh;background:var(--bg);
+  border-radius:36px;box-shadow:0 24px 64px rgba(15,23,42,.35),0 0 0 10px #0F172A;
+  overflow:hidden;position:relative;display:flex;flex-direction:column}
+@media (max-width:480px){
+  body{padding:0;background:var(--bg)}
+  .phone{width:100%;height:100dvh;max-height:none;border-radius:0;box-shadow:none}
+}
+.statusbar{height:34px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;font-size:12.5px;font-weight:600;color:var(--fg);flex:none;background:var(--bg)}
+.statusbar .right{display:flex;gap:5px;align-items:center}
+
+/* App shell */
+.app{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:16px 16px 96px;display:none;
+  scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{display:block;animation:fadein .2s ease-out}
+@keyframes fadein{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.screen.active{animation:none}}
+
+/* Header */
+.apphead{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.apphead .brand{display:flex;align-items:center;gap:10px}
+.logo{width:38px;height:38px;border-radius:11px;background:var(--primary);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-family:'Poppins';font-weight:700;font-size:19px}
+.apphead .who{font-size:12px;color:var(--muted)}
+.apphead .co{font-family:'Poppins';font-weight:600;font-size:14.5px}
+.rolechip{display:flex;align-items:center;gap:6px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:999px;padding:8px 13px;font-size:12.5px;font-weight:600;color:var(--primary);min-height:36px}
+.rolechip:active{background:var(--muted-bg)}
+
+.backrow{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.backbtn{width:40px;height:40px;border-radius:12px;background:var(--card);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;color:var(--fg)}
+.backrow h2{font-size:17px}
+
+/* Cards & stats */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
+.statgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 10px;box-shadow:var(--shadow)}
+.stat .n{font-family:'Poppins';font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.stat .l{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3}
+.stat.green .n{color:var(--accent)} .stat.amber .n{color:var(--amber)}
+
+.sectionrow{display:flex;justify-content:space-between;align-items:baseline;margin:18px 0 10px}
+.sectionrow h3{font-size:14.5px}
+.sectionrow button{font-size:12.5px;color:var(--primary);font-weight:600;padding:6px}
+
+/* Job list items */
+.job{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:13px;margin-bottom:10px;width:100%;text-align:left}
+.job:active{background:var(--muted-bg)}
+.job .time{font-family:'Poppins';font-weight:600;font-size:13px;color:var(--primary);
+  background:#EFF6FF;border-radius:10px;padding:8px 9px;text-align:center;min-width:58px;line-height:1.25}
+.job .meta{flex:1;min-width:0}
+.job .meta .t{font-weight:700;font-size:14px;margin-bottom:2px}
+.job .meta .s{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;border-radius:999px;
+  padding:3.5px 9px;letter-spacing:.02em}
+.b-res{background:#EFF6FF;color:var(--primary)} .b-com{background:#F5F3FF;color:#7C3AED}
+.b-post{background:var(--amber-soft);color:var(--amber)}
+.b-done{background:var(--accent-soft);color:var(--accent)}
+.b-prog{background:var(--amber-soft);color:var(--amber)}
+.b-booked{background:var(--muted-bg);color:var(--muted)}
+.b-unpaid{background:#FEF2F2;color:var(--destructive)}
+.b-paid{background:var(--accent-soft);color:var(--accent)}
+.b-verified{background:var(--accent-soft);color:var(--accent)}
+.b-pending{background:var(--amber-soft);color:var(--amber)}
+
+/* Buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;
+  border-radius:13px;font-size:15px;font-weight:700;transition:filter .15s}
+.btn:active{filter:brightness(.92)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-green{background:var(--accent);color:#fff}
+.btn-outline{background:var(--card);border:1.5px solid var(--border);color:var(--fg)}
+.btnrow{display:flex;gap:10px;margin-top:12px}
+.btnrow .btn{flex:1}
+
+/* Bottom nav */
+.nav{position:absolute;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);
+  display:flex;padding:6px 8px calc(10px + env(safe-area-inset-bottom));z-index:50}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;
+  font-size:10.5px;font-weight:600;color:var(--muted);border-radius:12px;min-height:52px}
+.nav button.on{color:var(--primary)}
+.nav button.on .ic{background:#EFF6FF}
+.nav .ic{width:38px;height:24px;border-radius:999px;display:flex;align-items:center;justify-content:center}
+.fab{position:absolute;right:16px;bottom:88px;width:56px;height:56px;border-radius:18px;background:var(--primary);
+  color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(37,99,235,.4);z-index:40}
+.fab:active{filter:brightness(.9)}
+
+/* Calendar */
+.weekstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
+.day{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:9px 0 7px;
+  text-align:center;min-height:56px}
+.day .dw{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.day .dn{font-family:'Poppins';font-weight:600;font-size:15px;margin-top:1px}
+.day .dot{width:5px;height:5px;border-radius:99px;background:var(--primary);margin:3px auto 0;visibility:hidden}
+.day.has .dot{visibility:visible}
+.day.sel{background:var(--primary);border-color:var(--primary);color:#fff}
+.day.sel .dw{color:#BFDBFE}.day.sel .dot{background:#fff}
+
+/* Checklist */
+.chk{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--border);width:100%;text-align:left}
+.chk:last-child{border-bottom:none}
+.chk .box{width:26px;height:26px;border-radius:9px;border:2px solid var(--border);flex:none;
+  display:flex;align-items:center;justify-content:center;color:#fff;transition:all .15s}
+.chk.done .box{background:var(--accent);border-color:var(--accent)}
+.chk .t{font-size:14px;font-weight:600;flex:1}
+.chk.done .t{color:var(--muted);text-decoration:line-through}
+.progress{height:8px;background:var(--muted-bg);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
+
+/* Detail rows */
+.kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--muted)} .kv .v{font-weight:600;text-align:right}
+.money{font-variant-numeric:tabular-nums}
+
+/* Photos */
+.photorow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.photo{aspect-ratio:4/3;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;font-size:11.5px;font-weight:700;border:2px dashed var(--border);color:var(--muted);background:var(--muted-bg)}
+.photo.filled{border:none;color:#fff;background:linear-gradient(160deg,#93C5FD,#2563EB)}
+.photo.filled.after{background:linear-gradient(160deg,#6EE7B7,#059669)}
+
+/* Staff */
+.person{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;margin-bottom:10px;width:100%;text-align:left}
+.person:active{background:var(--muted-bg)}
+.avatar{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins';font-weight:700;font-size:16px;color:#fff;flex:none}
+.a1{background:#2563EB}.a2{background:#7C3AED}.a3{background:#059669}.a4{background:#D97706}
+.person .meta{flex:1}.person .meta .t{font-weight:700;font-size:14px}
+.person .meta .s{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* Invoice */
+.inv{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:13px;margin-bottom:10px;width:100%;text-align:left}
+.inv .meta{flex:1}.inv .t{font-weight:700;font-size:13.5px}.inv .s{font-size:12px;color:var(--muted);margin-top:1px}
+.inv .amt{font-family:'Poppins';font-weight:700;font-size:14.5px;font-variant-numeric:tabular-nums;text-align:right}
+
+.paybox{border:1.5px solid var(--border);border-radius:13px;padding:12px;display:flex;gap:11px;align-items:center;margin-bottom:10px;background:var(--card);width:100%;text-align:left}
+.paybox:active{background:var(--muted-bg)}
+.paybox .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.paybox .t{font-weight:700;font-size:13.5px}.paybox .s{font-size:11.5px;color:var(--muted)}
+
+/* Cleaner mode */
+.cleanerbar{background:var(--accent);color:#fff;border-radius:var(--radius);padding:14px;margin-bottom:14px}
+.cleanerbar .h{font-family:'Poppins';font-weight:600;font-size:15px}
+.cleanerbar .s{font-size:12.5px;opacity:.9;margin-top:2px}
+.gps{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:10px 0 4px}
+.gps .pulse{width:9px;height:9px;border-radius:99px;background:var(--accent);box-shadow:0 0 0 4px rgba(5,150,105,.18)}
+
+.toast{position:absolute;left:16px;right:16px;bottom:96px;background:var(--fg);color:#fff;border-radius:13px;
+  padding:13px 16px;font-size:13.5px;font-weight:600;display:flex;gap:9px;align-items:center;z-index:60;
+  opacity:0;transform:translateY(8px);pointer-events:none;transition:all .25s}
+.toast.show{opacity:1;transform:none}
+.note{font-size:11.5px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5}
+svg{flex:none}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="statusbar" aria-hidden="true">
+    <span>9:41</span>
+    <div class="right">
+      <svg width="15" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M2 22h20V2L2 22z"/></svg>
+      <svg width="20" height="11" viewBox="0 0 26 13"><rect x=".5" y=".5" width="21" height="12" rx="3" fill="none" stroke="currentColor"/><rect x="2.5" y="2.5" width="14" height="8" rx="1.5" fill="currentColor"/><path d="M23.5 4.5v4a2.2 2.2 0 0 0 0-4z" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="screens">
+
+      <!-- ============ OWNER: DASHBOARD ============ -->
+      <section class="screen active" id="home">
+        <div class="apphead">
+          <div class="brand">
+            <div class="logo" aria-hidden="true">M</div>
+            <div><div class="who">Good morning, Dex</div><div class="co">SparkleClean Services Ltd</div></div>
+          </div>
+          <button class="rolechip" onclick="setMode('cleaner')" aria-label="Switch to cleaner view">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg>
+            Cleaner view
+          </button>
+        </div>
+
+        <div class="statgrid">
+          <div class="stat"><div class="n">7</div><div class="l">Jobs today</div></div>
+          <div class="stat green"><div class="n money">₦86,500</div><div class="l">Collected today</div></div>
+          <div class="stat amber"><div class="n money">₦342,000</div><div class="l">Outstanding</div></div>
+        </div>
+
+        <div class="card" style="display:flex;gap:11px;align-items:center;background:var(--amber-soft);border-color:#FDE68A">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <div style="flex:1;font-size:12.5px;font-weight:600">3 invoices overdue · Zenith Towers is 12 days late</div>
+          <button style="color:var(--amber);font-weight:700;font-size:12.5px;padding:6px" onclick="go('money')">View</button>
+        </div>
+
+        <div class="sectionrow"><h3>Today's jobs — Fri 11 Jul</h3><button onclick="go('jobs')">Calendar</button></div>
+
+        <button class="job" onclick="go('jobdetail')">
+          <div class="time">8:00<br>AM</div>
+          <div class="meta">
+            <div class="t">Mrs. Adebayo — Duplex deep clean</div>
+            <div class="s"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Lekki Phase 1 · Team A (3)</div>
+          </div>
+          <span class="badge b-prog">In progress</span>
+        </button>
+
+        <button class="job" onclick="go('jobdetail')">
+          <div class="time">11:30<br>AM</div>
+          <div class="meta">
+            <div class="t">Halogen HQ — Daily office clean</div>
+            <div class="s"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Victoria Island · Team B (4)</div>
+          </div>
+          <span class="badge b-booked">Booked</span>
+        </button>
+
+        <button class="job" onclick="go('jobdetail')">
+          <div class="time">2:00<br>PM</div>
+          <div class="meta">
+            <div class="t">Emerald Court — Post-construction</div>
+            <div class="s"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Ikeja GRA · Team A (3)</div>
+          </div>
+          <span class="badge b-post">Post-const.</span>
+        </button>
+
+        <div class="sectionrow"><h3>Staff on duty</h3><button onclick="go('staff')">All staff</button></div>
+        <div class="card" style="display:flex;gap:8px;align-items:center">
+          <div class="avatar a1" style="width:38px;height:38px;font-size:13px">CO</div>
+          <div class="avatar a2" style="width:38px;height:38px;font-size:13px;margin-left:-14px;border:2px solid #fff">BA</div>
+          <div class="avatar a3" style="width:38px;height:38px;font-size:13px;margin-left:-14px;border:2px solid #fff">IM</div>
+          <div class="avatar a4" style="width:38px;height:38px;font-size:13px;margin-left:-14px;border:2px solid #fff">FE</div>
+          <div style="flex:1;font-size:12.5px;font-weight:600;margin-left:4px">7 of 9 checked in</div>
+          <span class="badge b-verified">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            GPS verified</span>
+        </div>
+      </section>
+
+      <!-- ============ OWNER: JOBS / CALENDAR ============ -->
+      <section class="screen" id="jobs">
+        <div class="apphead"><h2 style="font-size:19px">Jobs</h2>
+          <button class="rolechip" onclick="toast('New job form — quote template picker would open')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New job</button>
+        </div>
+        <div class="weekstrip" role="tablist" aria-label="Week of 7 July">
+          <div class="day has"><div class="dw">Mon</div><div class="dn">7</div><div class="dot"></div></div>
+          <div class="day has"><div class="dw">Tue</div><div class="dn">8</div><div class="dot"></div></div>
+          <div class="day"><div class="dw">Wed</div><div class="dn">9</div><div class="dot"></div></div>
+          <div class="day has"><div class="dw">Thu</div><div class="dn">10</div><div class="dot"></div></div>
+          <div class="day sel has"><div class="dw">Fri</div><div class="dn">11</div><div class="dot"></div></div>
+          <div class="day has"><div class="dw">Sat</div><div class="dn">12</div><div class="dot"></div></div>
+          <div class="day"><div class="dw">Sun</div><div class="dn">13</div><div class="dot"></div></div>
+        </div>
+
+        <div class="sectionrow"><h3>Friday 11 July · 7 jobs</h3><button onclick="toast('Filter: type, team, status')">Filter</button></div>
+
+        <button class="job" onclick="go('jobdetail')">
+          <div class="time">8:00<br>AM</div>
+          <div class="meta"><div class="t">Mrs. Adebayo — Duplex deep clean</div>
+          <div class="s">4-bed duplex · ₦55,000 · Team A</div></div>
+          <span class="badge b-res">Residential</span>
+        </button>
+        <button class="job" onclick="go('jobdetail')">
+          <div class="time">11:30<br>AM</div>
+          <div class="meta"><div class="t">Halogen HQ — Daily office clean</div>
+          <div class="s">Contract · ₦180,000/mo · Team B</div></div>
+          <span class="badge b-com">Commercial</span>
+        </button>
+        <button class="job" onclick="go('jobdetail')">
+          <div class="time">2:00<br>PM</div>
+          <div class="meta"><div class="t">Emerald Court — Post-construction</div>
+          <div class="s">New build, 6 flats · ₦240,000 · Team A</div></div>
+          <span class="badge b-post">Post-const.</span>
+        </button>
+        <button class="job" onclick="go('jobdetail')">
+          <div class="time">4:30<br>PM</div>
+          <div class="meta"><div class="t">Mr. Eze — 2-bed apartment</div>
+          <div class="s">Standard clean · ₦22,000 · Blessing</div></div>
+          <span class="badge b-res">Residential</span>
+        </button>
+
+        <div class="card" style="background:#EFF6FF;border-color:#BFDBFE">
+          <div style="display:flex;gap:10px;align-items:center">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/></svg>
+            <div style="flex:1;font-size:12.5px;font-weight:600">Recurring: Halogen HQ auto-books Mon–Fri from its contract</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ OWNER: JOB CARD DETAIL ============ -->
+      <section class="screen" id="jobdetail">
+        <div class="backrow">
+          <button class="backbtn" onclick="go('jobs')" aria-label="Back to jobs">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2>Job card #J-0247</h2>
+          <span class="badge b-prog" style="margin-left:auto">In progress</span>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:4px">
+            <div>
+              <div style="font-family:'Poppins';font-weight:600;font-size:16px">Mrs. Adebayo</div>
+              <div style="font-size:12.5px;color:var(--muted);margin-top:2px">4-bedroom duplex — deep clean</div>
+            </div>
+            <span class="badge b-res">Residential</span>
+          </div>
+          <div class="kv"><span class="k">Address</span><span class="v">12 Admiralty Way, Lekki Phase 1</span></div>
+          <div class="kv"><span class="k">Access note</span><span class="v">Gateman: Sunday · call on arrival</span></div>
+          <div class="kv"><span class="k">Team</span><span class="v">Chidinma, Blessing, Ibrahim</span></div>
+          <div class="kv"><span class="k">Checked in</span><span class="v" style="color:var(--accent)">8:04 AM · GPS on site</span></div>
+          <div class="kv"><span class="k">Job value</span><span class="v money">₦55,000 · deposit ₦20,000 paid</span></div>
+        </div>
+
+        <div class="card">
+          <div class="sectionrow" style="margin:0 0 4px"><h3>Checklist</h3><span id="chkcount" style="font-size:12px;color:var(--muted);font-weight:700">4/7 done</span></div>
+          <div class="progress"><i id="chkbar" style="width:57%"></i></div>
+          <button class="chk done" onclick="tick(this)"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">All bedrooms — dust, mop, wardrobes</span></button>
+          <button class="chk done" onclick="tick(this)"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Toilets & bathrooms ×5 — scrub, disinfect</span></button>
+          <button class="chk done" onclick="tick(this)"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Kitchen — degrease, cabinets, appliances</span></button>
+          <button class="chk done" onclick="tick(this)"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Living & dining — furniture, floors</span></button>
+          <button class="chk" onclick="tick(this)"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Windows & nets — inside and out</span></button>
+          <button class="chk" onclick="tick(this)"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Balconies & external corridors</span></button>
+          <button class="chk" onclick="tick(this)"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Final walkthrough with client</span></button>
+        </div>
+
+        <div class="card">
+          <div class="sectionrow" style="margin:0 0 10px"><h3>Photos</h3></div>
+          <div class="photorow">
+            <div class="photo filled"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>Before · 3 photos</div>
+            <div class="photo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>After · add photos</div>
+          </div>
+        </div>
+
+        <div class="btnrow">
+          <button class="btn btn-outline" onclick="toast('Opens WhatsApp with job update pre-filled for Mrs. Adebayo')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+            WhatsApp client</button>
+          <button class="btn btn-primary" onclick="go('invoice')">Create invoice</button>
+        </div>
+      </section>
+
+      <!-- ============ OWNER: MONEY ============ -->
+      <section class="screen" id="money">
+        <div class="apphead"><h2 style="font-size:19px">Money</h2>
+          <button class="rolechip" onclick="toast('New quote — room-count template picker')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New quote</button>
+        </div>
+        <div class="statgrid">
+          <div class="stat green"><div class="n money">₦1.24M</div><div class="l">Collected · July</div></div>
+          <div class="stat amber"><div class="n money">₦342k</div><div class="l">Outstanding</div></div>
+          <div class="stat"><div class="n money">₦187k</div><div class="l">Expenses · July</div></div>
+        </div>
+
+        <div class="sectionrow"><h3>Invoices</h3><button onclick="toast('Full invoice list with filters')">See all</button></div>
+
+        <button class="inv" onclick="go('invoice')">
+          <div class="meta"><div class="t">INV-0198 · Mrs. Adebayo</div><div class="s">Due today · deposit received</div></div>
+          <div><div class="amt money">₦35,000</div><span class="badge b-unpaid">Balance due</span></div>
+        </button>
+        <button class="inv" onclick="toast('Invoice INV-0195 — 12 days overdue. Send reminder?')">
+          <div class="meta"><div class="t">INV-0195 · Zenith Towers</div><div class="s">Monthly contract · 12 days overdue</div></div>
+          <div><div class="amt money">₦220,000</div><span class="badge b-unpaid">Overdue</span></div>
+        </button>
+        <button class="inv" onclick="toast('Paid via Paystack bank transfer, auto-reconciled')">
+          <div class="meta"><div class="t">INV-0197 · Halogen HQ</div><div class="s">Paid via transfer · auto-matched</div></div>
+          <div><div class="amt money">₦180,000</div><span class="badge b-paid">Paid</span></div>
+        </button>
+        <button class="inv" onclick="toast('Cash logged by Blessing at job site, pending your confirmation')">
+          <div class="meta"><div class="t">INV-0196 · Mr. Eze</div><div class="s">Cash collected on site by Blessing</div></div>
+          <div><div class="amt money">₦22,000</div><span class="badge b-pending">Cash · confirm</span></div>
+        </button>
+
+        <div class="sectionrow"><h3>Quote templates</h3><button onclick="toast('Edit naira floors per property type')">Edit</button></div>
+        <div class="card" style="padding:6px 14px">
+          <div class="kv"><span class="k">Single room + toilet</span><span class="v money">from ₦12,000</span></div>
+          <div class="kv"><span class="k">2-bedroom apartment</span><span class="v money">from ₦22,000</span></div>
+          <div class="kv"><span class="k">4-bedroom duplex</span><span class="v money">from ₦55,000</span></div>
+          <div class="kv"><span class="k">Office (per m², monthly)</span><span class="v money">custom quote</span></div>
+          <div class="kv"><span class="k">Post-construction</span><span class="v money">site visit + quote</span></div>
+        </div>
+      </section>
+
+      <!-- ============ OWNER: INVOICE DETAIL ============ -->
+      <section class="screen" id="invoice">
+        <div class="backrow">
+          <button class="backbtn" onclick="go('money')" aria-label="Back to money">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2>Invoice INV-0198</h2>
+          <span class="badge b-unpaid" style="margin-left:auto" id="invstatus">Balance due</span>
+        </div>
+
+        <div class="card">
+          <div class="kv"><span class="k">Client</span><span class="v">Mrs. Adebayo · Lekki Phase 1</span></div>
+          <div class="kv"><span class="k">Job</span><span class="v">#J-0247 · Duplex deep clean</span></div>
+          <div class="kv"><span class="k">Deep clean — 4-bed duplex</span><span class="v money">₦55,000</span></div>
+          <div class="kv"><span class="k">VAT (7.5%)</span><span class="v money">₦4,125</span></div>
+          <div class="kv"><span class="k">Deposit received · 8 Jul</span><span class="v money" style="color:var(--accent)">−₦20,000</span></div>
+          <div class="kv" style="font-size:15px"><span class="k" style="color:var(--fg);font-weight:700">Balance due</span><span class="v money" style="font-family:'Poppins';font-size:16px">₦39,125</span></div>
+        </div>
+
+        <div class="sectionrow" style="margin-top:4px"><h3>Collect payment</h3></div>
+        <button class="paybox" onclick="toast('Paystack link copied — client can pay by card, transfer or USSD')">
+          <div class="ic" style="background:#EFF6FF;color:var(--primary)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          </div>
+          <div style="flex:1"><div class="t">Paystack payment link</div><div class="s">Card · bank transfer · USSD — settles to your account</div></div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <button class="paybox" onclick="toast('Logged: cash received. Owner confirmation required to reconcile.')">
+          <div class="ic" style="background:var(--accent-soft);color:var(--accent)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>
+          </div>
+          <div style="flex:1"><div class="t">Record cash payment</div><div class="s">Field-collected cash, reconciled to this invoice</div></div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+
+        <button class="btn btn-green" style="margin-top:6px" onclick="toast('WhatsApp opens: invoice PDF + Paystack link pre-filled to Mrs. Adebayo')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0Zm5 0a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0Z"/></svg>
+          Send invoice via WhatsApp
+        </button>
+        <p class="note">Client taps the link → pays with card, transfer or USSD →<br>invoice auto-marks paid via Paystack webhook.</p>
+      </section>
+
+      <!-- ============ OWNER: STAFF ============ -->
+      <section class="screen" id="staff">
+        <div class="apphead"><h2 style="font-size:19px">Staff</h2>
+          <button class="rolechip" onclick="toast('Add staff — ID, guarantor and vetting workflow starts')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add staff</button>
+        </div>
+
+        <button class="person" onclick="go('staffdetail')">
+          <div class="avatar a1">CO</div>
+          <div class="meta"><div class="t">Chidinma Okafor</div><div class="s">Team A lead · 142 jobs · ★ 4.9</div></div>
+          <span class="badge b-verified">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Vetted</span>
+        </button>
+        <button class="person" onclick="toast('Blessing Adeyemi — profile')">
+          <div class="avatar a3">BA</div>
+          <div class="meta"><div class="t">Blessing Adeyemi</div><div class="s">Cleaner · 98 jobs · ★ 4.8</div></div>
+          <span class="badge b-verified">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Vetted</span>
+        </button>
+        <button class="person" onclick="toast('Ibrahim Musa — profile')">
+          <div class="avatar a2">IM</div>
+          <div class="meta"><div class="t">Ibrahim Musa</div><div class="s">Cleaner · 76 jobs · ★ 4.7</div></div>
+          <span class="badge b-verified">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Vetted</span>
+        </button>
+        <button class="person" onclick="toast('Funke Balogun — 2 vetting items outstanding')">
+          <div class="avatar a4">FE</div>
+          <div class="meta"><div class="t">Funke Balogun</div><div class="s">New hire · guarantor form pending</div></div>
+          <span class="badge b-pending">Vetting</span>
+        </button>
+
+        <div class="card" style="background:var(--accent-soft);border-color:#A7F3D0;display:flex;gap:11px;align-items:center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+          <div style="flex:1;font-size:12.5px;font-weight:600">Clients see a “Vetted by Mesjia records” profile before each visit — ID checked, guarantor on file.</div>
+        </div>
+      </section>
+
+      <!-- ============ OWNER: STAFF DETAIL ============ -->
+      <section class="screen" id="staffdetail">
+        <div class="backrow">
+          <button class="backbtn" onclick="go('staff')" aria-label="Back to staff">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2>Staff profile</h2>
+        </div>
+
+        <div class="card" style="display:flex;gap:14px;align-items:center">
+          <div class="avatar a1" style="width:58px;height:58px;font-size:20px">CO</div>
+          <div style="flex:1">
+            <div style="font-family:'Poppins';font-weight:600;font-size:16px">Chidinma Okafor</div>
+            <div style="font-size:12.5px;color:var(--muted)">Team A lead · joined Mar 2025</div>
+          </div>
+          <span class="badge b-verified">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Vetted</span>
+        </div>
+
+        <div class="statgrid">
+          <div class="stat"><div class="n">142</div><div class="l">Jobs done</div></div>
+          <div class="stat green"><div class="n">★ 4.9</div><div class="l">Client rating</div></div>
+          <div class="stat"><div class="n">98%</div><div class="l">On-time check-in</div></div>
+        </div>
+
+        <div class="card">
+          <div class="sectionrow" style="margin:0 0 4px"><h3>Vetting record</h3></div>
+          <div class="kv"><span class="k">NIN</span><span class="v">Verified · doc on file ✓</span></div>
+          <div class="kv"><span class="k">Guarantor</span><span class="v">Mr. Emeka Okafor (brother)</span></div>
+          <div class="kv"><span class="k">Guarantor phone</span><span class="v">0803 ••• 4421</span></div>
+          <div class="kv"><span class="k">Guarantor address</span><span class="v">22 Awolowo Rd, Ikoyi ✓</span></div>
+          <div class="kv"><span class="k">Background check</span><span class="v" style="color:var(--accent)">Cleared · Feb 2025</span></div>
+        </div>
+
+        <div class="card">
+          <div class="sectionrow" style="margin:0 0 4px"><h3>Pay</h3></div>
+          <div class="kv"><span class="k">Rate</span><span class="v money">₦4,500 per job + transport</span></div>
+          <div class="kv"><span class="k">July so far</span><span class="v money">38 jobs · ₦171,000</span></div>
+          <div class="kv"><span class="k">Next payroll run</span><span class="v">31 July</span></div>
+        </div>
+
+        <div class="btnrow">
+          <button class="btn btn-outline" onclick="toast('Verified-cleaner profile sent to client via WhatsApp')">Share profile</button>
+          <button class="btn btn-primary" onclick="toast('Assign to a job — calendar opens')">Assign job</button>
+        </div>
+      </section>
+
+      <!-- ============ CLEANER MODE: MY JOBS ============ -->
+      <section class="screen" id="cjobs">
+        <div class="apphead">
+          <div class="brand">
+            <div class="avatar a1" style="width:38px;height:38px;font-size:13px">CO</div>
+            <div><div class="who">Cleaner app</div><div class="co">Hi Chidinma</div></div>
+          </div>
+          <button class="rolechip" onclick="setMode('owner')" aria-label="Back to owner view">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Owner view
+          </button>
+        </div>
+
+        <div class="cleanerbar">
+          <div class="h">Friday, 11 July</div>
+          <div class="s">2 jobs today · Team A — Blessing & Ibrahim with you</div>
+        </div>
+
+        <button class="job" onclick="go('cjobdetail')">
+          <div class="time">8:00<br>AM</div>
+          <div class="meta"><div class="t">Mrs. Adebayo — deep clean</div>
+          <div class="s">Lekki Phase 1 · 4-bed duplex</div></div>
+          <span class="badge b-prog">Now</span>
+        </button>
+        <button class="job" onclick="toast('Next job opens after the current one is completed')">
+          <div class="time">2:00<br>PM</div>
+          <div class="meta"><div class="t">Emerald Court — post-construction</div>
+          <div class="s">Ikeja GRA · 6 flats</div></div>
+          <span class="badge b-booked">Up next</span>
+        </button>
+
+        <div class="card" style="display:flex;gap:11px;align-items:center">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"/><path d="m12 3v13"/><path d="m8 12 4 4 4-4"/></svg>
+          <div style="flex:1;font-size:12.5px;font-weight:600;color:var(--muted)">Works offline — today's jobs are saved on your phone. Updates upload when you have network.</div>
+        </div>
+      </section>
+
+      <!-- ============ CLEANER MODE: JOB DETAIL ============ -->
+      <section class="screen" id="cjobdetail">
+        <div class="backrow">
+          <button class="backbtn" onclick="go('cjobs')" aria-label="Back to my jobs">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <h2>Mrs. Adebayo — deep clean</h2>
+        </div>
+
+        <div class="card">
+          <div class="kv"><span class="k">Address</span><span class="v">12 Admiralty Way, Lekki Ph. 1</span></div>
+          <div class="kv"><span class="k">Access</span><span class="v">Gateman: Sunday · call on arrival</span></div>
+          <div class="kv"><span class="k">Team</span><span class="v">You, Blessing, Ibrahim</span></div>
+        </div>
+
+        <div class="gps"><span class="pulse" aria-hidden="true"></span>GPS: you are at the job location</div>
+        <button class="btn btn-green" id="checkinbtn" onclick="checkin()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          Check in at site
+        </button>
+
+        <div class="card" style="margin-top:12px">
+          <div class="sectionrow" style="margin:0 0 4px"><h3>My checklist</h3><span id="cchkcount" style="font-size:12px;color:var(--muted);font-weight:700">0/3 done</span></div>
+          <div class="progress"><i id="cchkbar" style="width:0%"></i></div>
+          <button class="chk" onclick="tick(this,'c')"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Take BEFORE photos of every room</span></button>
+          <button class="chk" onclick="tick(this,'c')"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Master bedroom + en-suite</span></button>
+          <button class="chk" onclick="tick(this,'c')"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Take AFTER photos + client walkthrough</span></button>
+        </div>
+
+        <div class="btnrow">
+          <button class="btn btn-outline" onclick="toast('Camera opens — photo compresses to ~200KB before upload')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            Add photo</button>
+          <button class="btn btn-primary" onclick="toast('Job marked complete — owner notified, invoice ready to send')">Complete job</button>
+        </div>
+        <p class="note">Check-in time + GPS goes on the job card.<br>The owner and the client both see progress live.</p>
+      </section>
+
+    </div>
+
+    <!-- FAB (owner mode) -->
+    <button class="fab" id="fab" onclick="toast('New job — pick client, type and quote template')" aria-label="Create new job">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+
+    <!-- Bottom nav: owner -->
+    <nav class="nav" id="ownernav" aria-label="Main navigation">
+      <button class="on" data-s="home" onclick="go('home',this)">
+        <span class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/></svg></span>Home</button>
+      <button data-s="jobs" onclick="go('jobs',this)">
+        <span class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Jobs</button>
+      <button data-s="money" onclick="go('money',this)">
+        <span class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></span>Money</button>
+      <button data-s="staff" onclick="go('staff',this)">
+        <span class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Staff</button>
+    </nav>
+
+    <!-- Bottom nav: cleaner -->
+    <nav class="nav" id="cleanernav" aria-label="Cleaner navigation" style="display:none">
+      <button class="on" data-s="cjobs" onclick="go('cjobs',this)">
+        <span class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>My jobs</button>
+      <button onclick="toast('Cleaner earnings: jobs done this month and pay due')">
+        <span class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></span>My pay</button>
+      <button onclick="toast('Cleaner profile: documents, rating, guarantor record')">
+        <span class="ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profile</button>
+    </nav>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+let mode='owner';
+function go(id,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const nav=document.getElementById(mode==='owner'?'ownernav':'cleanernav');
+  nav.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.s===rootOf(id)));
+}
+function rootOf(id){
+  if(id==='jobdetail')return'jobs';
+  if(id==='invoice')return'money';
+  if(id==='staffdetail')return'staff';
+  if(id==='cjobdetail')return'cjobs';
+  return id;
+}
+function setMode(m){
+  mode=m;
+  document.getElementById('ownernav').style.display=m==='owner'?'flex':'none';
+  document.getElementById('cleanernav').style.display=m==='cleaner'?'flex':'none';
+  document.getElementById('fab').style.display=m==='owner'?'flex':'none';
+  go(m==='owner'?'home':'cjobs');
+}
+function tick(el,prefix){
+  el.classList.toggle('done');
+  const card=el.closest('.card');
+  const items=card.querySelectorAll('.chk');
+  const done=card.querySelectorAll('.chk.done').length;
+  const isC=prefix==='c';
+  document.getElementById(isC?'cchkcount':'chkcount').textContent=done+'/'+items.length+' done';
+  document.getElementById(isC?'cchkbar':'chkbar').style.width=Math.round(done/items.length*100)+'%';
+  if(done===items.length)toast('Checklist complete — nice work!');
+}
+function checkin(){
+  const b=document.getElementById('checkinbtn');
+  b.style.background='var(--accent-soft)';b.style.color='var(--accent)';
+  b.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Checked in · 8:04 AM · GPS verified';
+  b.onclick=null;b.style.cursor='default';
+  toast('Checked in — the owner can see you arrived');
+}
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'+msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+</script>
+</body>
+</html>
