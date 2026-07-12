@@ -23,7 +23,14 @@ Next.js (TypeScript) PWA · Supabase (Postgres + Auth + Storage + RLS) · Tailwi
 
 ## Status
 
-Pre-code: research ✅ · design spec ✅ · prototype ✅ · implementation plan next.
+Research ✅ · design spec ✅ · prototypes ✅ · implementation plan ✅ · **app built (Phases 1–4) ✅**
+
+The working application lives in [`medja-app/`](medja-app/) — Next.js + Supabase + Paystack,
+all four phases implemented (auth, clients, jobs, quotes, invoices, staff vetting,
+cleaner field app with GPS + photos, Paystack payments, recurring contracts,
+payroll, reports, booking link, billing). See [`medja-app/README.md`](medja-app/README.md)
+to run it and [`docs/superpowers/plans/2026-07-12-medja-implementation.md`](docs/superpowers/plans/2026-07-12-medja-implementation.md)
+for the plan. 30 unit tests pass; production build is clean (31 routes).
 
 ---
 
