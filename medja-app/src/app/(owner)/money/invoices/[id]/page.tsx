@@ -6,6 +6,7 @@ import { formatNaira } from "@/lib/money";
 import { waLink } from "@/lib/whatsapp";
 import { MarkPaidButton } from "./MarkPaidButton";
 import { PayButton } from "@/features/payments/PayButton";
+import { DepositForm } from "@/features/invoices/DepositForm";
 
 export default async function InvoiceDetailPage({
   params,
@@ -79,8 +80,9 @@ export default async function InvoiceDetailPage({
       </div>
 
       {inv.status !== "paid" && (
-        <div className="mt-3">
+        <div className="mt-3 flex flex-col gap-2">
           <PayButton invoiceId={inv.id} />
+          <DepositForm invoiceId={inv.id} />
         </div>
       )}
       <div className="mt-2 flex gap-2">

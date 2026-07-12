@@ -64,3 +64,25 @@ export async function markInvoicePaid(invoiceId: string) {
   revalidatePath(`/money/invoices/${invoiceId}`);
   revalidatePath("/money");
 }
+
+/** Record a deposit / part-payment (naira) against an invoice's balance. */
+export async function recordDeposit(invoiceId: string, naira: number) {
+  const supabase = await createServerClient();
+  const { data: inv } = await supabase
+    .from("invoices")
+    .select("total_kobo, deposit_kobo")
+    .eq("id", invoiceId)
+    .maybeSingle();
+  const row = inv as { total_kobo: number; deposit_kobo: number } | null;
+  if (!row) throw new Error("Invoice not found");
+
+  const newDeposit = row.deposit_kobo + toKobo(naira);
+  const status = newDeposit >= row.total_kobo ? "paid" : "balance_due";
+  await supabase
+    .from("invoices")
+    .update({ deposit_kobo: newDeposit, status })
+    .eq("id", invoiceId);
+
+  revalidatePath(`/money/invoices/${invoiceId}`);
+  revalidatePath("/money");
+}
