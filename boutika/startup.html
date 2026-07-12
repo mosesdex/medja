@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boutika — Startup Document</title>
+<meta name="description" content="Boutika startup document: the operating system for Nigerian boutiques. Problem, product, business model, go-to-market, and a phased roadmap with exit tests.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --primary:#A4123F; --primary-dark:#7E0E30; --rose:#C2185B; --rose-soft:#FCE7EF;
+  --gold:#B8862B; --gold-soft:#FBF1DC; --ink:#211A1D; --fg:#2C2327; --muted:#7A6B71;
+  --bg:#FBF7F3; --card:#FFFFFF; --cream:#F4ECE3; --border:#EADFD6; --border2:#E2D3C7;
+  --green:#3F7A5C; --green-soft:#E7F2EC;
+  --radius:16px; --shadow:0 1px 3px rgba(33,26,29,.06),0 8px 28px rgba(33,26,29,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;line-height:1.18;color:var(--ink);letter-spacing:-.01em}
+a{color:var(--primary);text-decoration:none}
+.wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--primary);background:var(--rose-soft);border-radius:999px;padding:7px 14px}
+section{padding:56px 0;border-bottom:1px solid var(--border)}
+.sechead{max-width:680px;margin-bottom:32px}
+.sechead h2{font-size:clamp(24px,4vw,34px);margin:14px 0 12px}
+.sechead p{color:var(--muted);font-size:16px}
+header{position:sticky;top:0;background:rgba(251,247,243,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:50}
+.navbar{display:flex;align-items:center;gap:22px;padding:13px 0}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Fraunces';font-weight:700;font-size:20px;color:var(--ink)}
+.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(140deg,var(--primary),var(--rose));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px;font-family:'Fraunces'}
+.navlinks{display:none;gap:22px;margin-left:auto;align-items:center}
+.navlinks a{font-size:13.5px;font-weight:600;color:var(--muted)}
+.navlinks a:hover{color:var(--ink)}
+@media(min-width:860px){.navlinks{display:flex}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:11px;font-size:14px;font-weight:600;transition:all .15s;cursor:pointer;border:none;font-family:'Inter'}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-outline{background:var(--card);border:1.5px solid var(--border2);color:var(--ink)}.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn.sm{padding:9px 15px;font-size:13px}
+.hero{padding:64px 0 50px;background:radial-gradient(1200px 400px at 70% -10%,var(--rose-soft),transparent)}
+.hero h1{font-size:clamp(32px,6vw,54px);font-weight:700;max-width:820px;margin:20px 0 18px}
+.hero h1 em{font-style:italic;color:var(--primary)}
+.hero .lead{max-width:660px;color:var(--muted);font-size:18px;margin-bottom:24px}
+.herobtns{display:flex;gap:12px;flex-wrap:wrap}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:6px}.crumb a{font-weight:600}
+.ctag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;border-radius:999px;padding:4px 9px}
+.c-v{background:var(--green-soft);color:var(--green)}.c-r{background:var(--gold-soft);color:var(--gold)}.c-j{background:var(--rose-soft);color:var(--rose)}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+.card .em{font-size:26px;margin-bottom:10px}
+.card h3{font-size:17px;margin-bottom:7px}
+.card p{font-size:14px;color:var(--muted)}
+.card .src{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:10px}
+.loop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 4px}
+.loop .step{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px 15px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow)}
+.loop .arr{color:var(--rose);font-weight:700;font-size:16px}
+.tier{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:14px}
+.tier .th{display:flex;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.tier .tnum{font-family:'Fraunces';font-weight:700;font-size:12.5px;color:#fff;background:var(--primary);border-radius:8px;padding:5px 11px}
+.tier.t1 .tnum{background:var(--gold)}.tier.t2 .tnum{background:var(--green)}.tier.tno .tnum{background:#C0392B}
+.tier h3{font-size:18px}.tier .sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+.flist{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px}
+.f{display:flex;gap:9px;font-size:13.5px;align-items:flex-start;padding:9px 12px;background:var(--bg);border-radius:10px;border:1px solid var(--border)}
+.f .k{color:var(--green);font-weight:700;flex:none}
+.f.no .k{color:#C0392B}
+.compare{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--border)}
+th{background:var(--cream);font-weight:700;color:var(--ink);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+tr:last-child td{border-bottom:none}td b{color:var(--ink)}
+.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:stretch}
+.price{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;display:flex;flex-direction:column}
+.price.hot{border-color:var(--primary);position:relative}
+.price.hot::before{content:'Anchor tier';position:absolute;top:-11px;left:26px;background:var(--primary);color:#fff;font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 13px;letter-spacing:.04em}
+.price h3{font-size:17px}.price .amt{font-family:'Fraunces';font-weight:700;font-size:30px;margin:10px 0 2px;color:var(--ink)}
+.price .amt span{font-size:13px;color:var(--muted);font-weight:500;font-family:'Inter'}
+.price .who{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+.price ul{list-style:none;margin:6px 0 0;flex:1}
+.price li{font-size:13px;padding:6px 0 6px 22px;position:relative;color:var(--fg)}
+.price li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:800}
+.callout{background:var(--gold-soft);border:1px solid #E9D3A0;border-left:4px solid var(--gold);border-radius:12px;padding:16px 20px;font-size:14px;color:#6B5220;margin-top:18px}
+.callout b{color:#4A3612}
+.callout.rose{background:var(--rose-soft);border-color:#F1C2D3;border-left-color:var(--rose);color:#7A2843}.callout.rose b{color:var(--primary)}
+/* roadmap */
+.phases{display:flex;flex-direction:column;gap:14px}
+.phase{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;position:relative;border-left:4px solid var(--primary)}
+.phase.p0{border-left-color:var(--muted)}.phase.p2{border-left-color:var(--gold)}.phase.p3{border-left-color:var(--green)}.phase.p4{border-left-color:var(--rose)}
+.phase .pnum{font-family:'Fraunces';font-weight:700;font-size:12.5px;color:var(--primary);background:var(--rose-soft);border-radius:8px;padding:4px 11px;display:inline-block;margin-bottom:8px}
+.phase h3{font-size:18px;margin-bottom:6px}
+.phase p{font-size:14px;color:var(--muted);margin-bottom:10px}
+.phase .exit{font-size:12.5px;background:var(--green-soft);color:var(--green);border-radius:10px;padding:9px 13px;font-weight:600;display:inline-block}
+.qlist{counter-reset:q;display:flex;flex-direction:column;gap:10px}
+.q{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px 18px;font-size:14.5px;box-shadow:var(--shadow)}
+.q::before{counter-increment:q;content:counter(q);font-family:'Fraunces';font-weight:700;color:#fff;background:var(--primary);width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none;font-size:14px}
+footer{background:var(--ink);color:#B9A7AE;padding:40px 0;text-align:center;border:none}
+footer a{color:var(--rose);font-weight:600}
+footer .foot-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap navbar">
+    <a href="index.html" class="brand"><span class="logo">B</span> Boutika</a>
+    <nav class="navlinks">
+      <a href="#problem">Problem</a>
+      <a href="#product">Product</a>
+      <a href="#model">Model</a>
+      <a href="#gtm">Go-to-market</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="research.html">Research</a>
+    </nav>
+    <a href="index.html" class="btn btn-outline sm" style="margin-left:auto">← All docs</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html">Boutika</a> · Startup document</div>
+    <span class="eyebrow">◆ Startup document</span>
+    <h1>The <em>operating system</em> for Nigerian boutiques.</h1>
+    <p class="lead">Know your stock, your money, and who owes you — then sell everywhere from the same place. Business management first; a storefront and marketplace attached on top of a back office the owner already trusts.</p>
+    <div class="herobtns">
+      <a href="research.html" class="btn btn-primary">See the evidence base →</a>
+      <a href="prototype-mobile.html" class="btn btn-outline">Open the prototype</a>
+    </div>
+    <div class="legend">
+      <span class="ctag c-v">✅ Verified fact</span>
+      <span class="ctag c-r">🟡 Reported</span>
+      <span class="ctag c-j">🔵 Our judgement</span>
+    </div>
+  </div>
+</div>
+
+<section id="problem">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">01 · The problem</span><h2>She loses money she can't see</h2><p>A boutique owner runs a real business on memory, a notebook, and WhatsApp. The consequences are measurable — and they're the pains a management app removes.</p></div>
+    <div class="grid2">
+      <div class="card"><div class="em">🕳️</div><h3>Money lost to blind management</h3><p>Memory‑based management causes "undetected revenue leakages, stock mismanagement, and unrecorded debts."</p><div class="src">✅ Verified · IRJMS 2026</div></div>
+      <div class="card"><div class="em">🚨</div><h3>Staff theft undefended</h3><p>Many Nigerian SMEs have "no preventive measures against employee theft."</p><div class="src">✅ Verified · JFC 2018</div></div>
+      <div class="card"><div class="em">📒</div><h3>Credit sales pile up untracked</h3><p>Selling on credit is "a Nigerian small business reality" — receivables scatter across notebooks and chats until unpaid debt threatens the shop.</p><div class="src">🟡 Reported · SimpleBooks</div></div>
+      <div class="card"><div class="em">💸</div><h3>Existing software out of reach</h3><p>Accountants and accounting software are "prohibitive"; foreign tools demand documentation discipline owners lack.</p><div class="src">✅ Verified</div></div>
+    </div>
+    <div class="callout rose"><b>She does not want accounting.</b> She wants to stop losing money to stock, staff, and debtors — without becoming a bookkeeper. That's what we build first.</div>
+  </div>
+</section>
+
+<section id="why-now">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">02 · Why now</span><h2>The model is proven, the rails exist, the incumbents are generic</h2></div>
+    <div class="grid2">
+      <div class="card"><div class="em">📈</div><h3>The market already buys this</h3><p>Bumpa: 100k+ installs at 4.41★ — combined management + storefront is a proven Nigerian model. <span class="ctag c-v">✅</span></p></div>
+      <div class="card"><div class="em">🏦</div><h3>The rails are here</h3><p>Instant transfer (NIP), USSD, QR are how the market pays; 48% restock by transfer. <span class="ctag c-v">✅</span></p></div>
+      <div class="card"><div class="em">🛍️</div><h3>Social commerce is large & growing</h3><p>~US$2.04B (2025) → ~US$3.96B (2030). <span class="ctag c-r">🟡</span></p></div>
+      <div class="card"><div class="em">🎯</div><h3>Nobody owns the fashion vertical</h3><p>Incumbents are horizontal. Variant catalogs, thrift, layaway, restock trips are un‑served. <span class="ctag c-j">🔵</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="serves">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">03 · Who it serves</span><h2>Owner first, attendant second, buyer eventually</h2></div>
+    <div class="grid3">
+      <div class="card"><div class="em">👩🏾‍💼</div><h3>The owner‑operator</h3><p>1 shop and/or active Instagram/WhatsApp page, 1–3 staff, restocking on trips (Balogun/Yaba/Onitsha/Aba; Istanbul/Guangzhou/Dubai/UK). <b>Primary — Phase 1.</b></p></div>
+      <div class="card"><div class="em">🧍🏾‍♀️</div><h3>The shop attendant</h3><p>Logs sales under her own PIN — turning staff from a theft risk into an accountable node. <b>Secondary — Phase 1.</b></p></div>
+      <div class="card"><div class="em">🛒</div><h3>The buyer</h3><p>Discovers verified boutiques in a trust‑engineered marketplace; pays on delivery / pay‑to‑release. <b>Eventual — Phase 3+.</b></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="product">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">04 · Product</span><h2>Management first. Selling attached.</h2><p>Every core action must beat the notebook — under 5 seconds, one‑handed, offline‑tolerant, on a cheap Android.</p></div>
+    <div style="margin-bottom:22px">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px">The core loop</div>
+      <div class="loop">
+        <span class="step">Log stock</span><span class="arr">→</span>
+        <span class="step">Log sale (auto‑decrement)</span><span class="arr">→</span>
+        <span class="step">See money & debtors</span><span class="arr">→</span>
+        <span class="step">Collect what you're owed</span><span class="arr">→</span>
+        <span class="step">Restock smarter</span><span class="arr">→</span>
+        <span class="step">(Turn on) sell online</span>
+      </div>
+    </div>
+
+    <div class="tier t0">
+      <div class="th"><span class="tnum">Tier 0</span><h3>Trust‑winning core — the MVP</h3><span class="ctag c-v">This is the product</span></div>
+      <div class="sub">Business management. Beats the notebook on speed or we lose.</div>
+      <div class="flist">
+        <div class="f"><span class="k">✓</span><span>One‑tap sale (cash/transfer, optional customer)</span></div>
+        <div class="f"><span class="k">✓</span><span>Variant inventory (product→size→colour, auto‑decrement, low‑stock alerts)</span></div>
+        <div class="f"><span class="k">✓</span><span>Debtor ledger + one‑tap WhatsApp reminder</span></div>
+        <div class="f"><span class="k">✓</span><span>Money view (sales, expenses, owed, rough profit)</span></div>
+        <div class="f"><span class="k">✓</span><span>Staff accountability (per‑attendant PIN)</span></div>
+        <div class="f"><span class="k">✓</span><span>Expense logging</span></div>
+        <div class="f"><span class="k">✓</span><span>Offline‑first PWA</span></div>
+      </div>
+    </div>
+    <div class="tier t1">
+      <div class="th"><span class="tnum">Tier 1</span><h3>Selling, attached to the trusted core</h3></div>
+      <div class="sub">Turned on once she trusts Boutika with her numbers — zero data re‑entry.</div>
+      <div class="flist">
+        <div class="f"><span class="k">✓</span><span>Instant storefront (<code>hername.boutika.shop</code>)</span></div>
+        <div class="f"><span class="k">✓</span><span>WhatsApp‑native checkout → auto‑drops into sales + stock</span></div>
+        <div class="f"><span class="k">✓</span><span>Reconciling payments (transfer/USSD/QR/card, proof, auto‑match)</span></div>
+        <div class="f"><span class="k">✓</span><span>Social sync + channel analytics</span></div>
+      </div>
+    </div>
+    <div class="tier t2">
+      <div class="th"><span class="tnum">Tier 2</span><h3>The moat (later)</h3></div>
+      <div class="sub">Only credible after we have supply and reliability.</div>
+      <div class="flist">
+        <div class="f"><span class="k">✓</span><span>Restock‑trip planner & re‑order analytics</span></div>
+        <div class="f"><span class="k">✓</span><span>Boutika Marketplace (verified sellers, pay‑on‑delivery)</span></div>
+        <div class="f"><span class="k">✓</span><span>Layaway / instalments</span></div>
+        <div class="f"><span class="k">✓</span><span>Naira‑safe restock financing (on real history)</span></div>
+      </div>
+    </div>
+    <div class="tier tno">
+      <div class="th"><span class="tnum">NOT</span><h3>Deliberately out of scope early</h3></div>
+      <div class="sub">Learned from the verified failures.</div>
+      <div class="flist">
+        <div class="f no"><span class="k">✕</span><span>POS‑terminal / agency‑banking hardware (killed Kippa's funded bet ✅)</span></div>
+        <div class="f no"><span class="k">✕</span><span>Lending before data + a naira‑resistant model</span></div>
+        <div class="f no"><span class="k">✕</span><span>A horizontal "any business" tool</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="model">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">05 · Business model</span><h2>Priced to acquire, anchored to recover money</h2><p>Calibrated to hard constraints: 44% of owners earn &lt;₦20k/day ✅, and Nigerian micro‑merchants revolt at price rises (Kippa ₦25→₦35→₦25) ✅.</p></div>
+    <div class="pricing">
+      <div class="price"><h3>Free (Starter)</h3><div class="amt">₦0</div><div class="who">Acquisition — beat the notebook</div><ul><li>Capped catalog</li><li>Sale/stock/debtor logging</li><li>1 staff</li></ul></div>
+      <div class="price hot"><h3>Boutika Pro</h3><div class="amt">₦3,500<span>/mo · ₦9,000/qtr</span></div><div class="who">The serious owner</div><ul><li>Unlimited catalog + variants</li><li>Full debtor tools + reminders</li><li>Staff PINs</li><li>Storefront + analytics</li></ul></div>
+      <div class="price"><h3>Boutika Store+</h3><div class="amt">₦6,500<span>/mo · ₦18,000/qtr</span></div><div class="who">Selling online seriously</div><ul><li>Everything in Pro</li><li>Payment reconciliation</li><li>Social sync + custom domain</li><li>Priority support</li></ul></div>
+    </div>
+    <div class="callout"><b>Rules learned from the market:</b> anchor at/under Bumpa's ₦5,000 floor ✅ · value framed as money <em>recovered</em>, not features · quarterly/annual billing to smooth cash‑flow · optional transaction fee only on <em>online</em> payments, never on core takings · no dollar‑denominated cost base.</div>
+    <div class="callout rose"><b>🔵 Unit‑economics test:</b> a Pro subscriber must recover more than ₦3,500/mo in visible debt or caught shrinkage within her first month, or the price won't hold.</div>
+  </div>
+</section>
+
+<section id="moat">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">06 · Competition & moat</span><h2>Own the vertical the generalist can't</h2></div>
+    <div class="compare">
+      <table>
+        <tr><th>Dimension</th><th>Bumpa (horizontal ✅)</th><th>Boutika (vertical 🔵)</th></tr>
+        <tr><td><b>Positioning</b></td><td>"Any business owner"</td><td>Ruthlessly fashion boutique</td></tr>
+        <tr><td><b>Inventory</b></td><td>Generic products + barcodes</td><td>Size/colour variants + thrift one‑of‑ones</td></tr>
+        <tr><td><b>Debtors</b></td><td>Basic customer management</td><td>Credit ledger + WhatsApp reminders</td></tr>
+        <tr><td><b>Payments</b></td><td>USSD/transfer/card/QR/proof</td><td>Same + auto‑reconciliation</td></tr>
+        <tr><td><b>Extras</b></td><td>—</td><td>Layaway, restock‑trip planner, marketplace</td></tr>
+      </table>
+    </div>
+    <div class="callout rose"><b>The real competitor is the status quo — WhatsApp + a notebook (free).</b> We win on speed and trust. The moat compounds from the switching cost of her living inventory + debtor + sales history, vertical depth, and eventually a marketplace fed by our own verified supply.</div>
+  </div>
+</section>
+
+<section id="gtm">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">07 · Go‑to‑market</span><h2>Concierge in, recover money, convert, then turn on selling</h2></div>
+    <div class="phases">
+      <div class="phase p0"><span class="pnum">Step 1</span><h3>Concierge Phase 0</h3><p>Hand‑onboard 15–25 boutiques in one cluster (a Lagos plaza or an active Instagram‑vendor circle). Log their stock and debtors <em>for</em> them; watch what they actually use.</p></div>
+      <div class="phase"><span class="pnum">Step 2</span><h3>Land free, beat the notebook</h3><p>The wedge is faster sale/stock/debtor logging — not a website.</p></div>
+      <div class="phase p2"><span class="pnum">Step 3</span><h3>Recover money → convert to Pro</h3><p>The upgrade trigger is visible debt collected via WhatsApp reminders.</p></div>
+      <div class="phase p3"><span class="pnum">Step 4</span><h3>Turn on selling</h3><p>Once she trusts Boutika with her numbers, the storefront is one toggle.</p></div>
+      <div class="phase p4"><span class="pnum">Step 5</span><h3>Cluster‑by‑cluster density</h3><p>Boutiques refer boutiques within a market/plaza/niche; density feeds the eventual marketplace.</p></div>
+    </div>
+    <div class="callout">Channels: Instagram/WhatsApp vendor communities, market‑association partnerships, fashion micro‑influencers, and referral loops.</div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">08 · Roadmap</span><h2>Phases with exit tests</h2><p>Each phase must pass its exit test before the next begins — the Medja/Handwork discipline.</p></div>
+    <div class="phases">
+      <div class="phase p0"><span class="pnum">Phase 0 · 4–6 wks · minimal code</span><h3>Validation</h3><p>Concierge‑onboard 15–25 boutiques; log stock + debtors manually.</p><span class="exit">Exit: ≥10 owners say "don't take this away," ≥5 verbally commit to ₦3,500/mo after seeing recovered debt/shrinkage.</span></div>
+      <div class="phase"><span class="pnum">Phase 1 · 8–10 wks</span><h3>Trust‑winning core</h3><p>Ship Tier 0: one‑tap sale, variant inventory, debtor ledger + reminders, money view, staff PINs, offline PWA.</p><span class="exit">Exit: 50 active boutiques logging daily; median core action &lt;5s; ≥30% free→Pro conversion in cohort 1.</span></div>
+      <div class="phase p2"><span class="pnum">Phase 2 · 8–12 wks</span><h3>Selling attached</h3><p>Instant storefront, WhatsApp checkout, reconciling payments, social sync.</p><span class="exit">Exit: ≥40% of Pro users turn on a storefront; first reconciled online GMV; storefront users retain better.</span></div>
+      <div class="phase p3"><span class="pnum">Phase 3 · 12+ wks</span><h3>Moat: analytics + marketplace beta</h3><p>Restock‑trip planner; invite‑only marketplace in 1–2 dense clusters with pay‑on‑delivery.</p><span class="exit">Exit: buyers complete repeat purchases; verified‑seller trust beats cold social selling; supply density feels "full."</span></div>
+      <div class="phase p4"><span class="pnum">Phase 4 · thereafter</span><h3>Scale</h3><p>New clusters/cities; layaway; naira‑safe restock financing underwritten on real history.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="questions">
+  <div class="wrap">
+    <div class="sechead"><span class="eyebrow">09 · Open questions</span><h2>To resolve in Phase 0</h2></div>
+    <div class="qlist">
+      <div class="q">Will owners pay ₦3,500/mo <em>after</em> recovering visible debt/shrinkage they can see?</div>
+      <div class="q">Thrift/okrika one‑of‑one items break the variant matrix — separate mode, or out of v1 scope?</div>
+      <div class="q">Cheapest WhatsApp path that still auto‑captures the order (Business API vs. click‑to‑chat)?</div>
+      <div class="q">How many trusted, active boutiques before a buyer marketplace is worth launching?</div>
+      <div class="q">Can we auto‑reconcile a bank transfer to an invoice without full open‑banking access?</div>
+    </div>
+    <div class="callout" style="margin-top:24px"><b>Relationship to the portfolio:</b> Boutika is the third vertical after <b>Medja</b> (cleaning) and <b>Handwork</b> (building trades). It reuses the shared core — naira payments, WhatsApp messaging, Android‑first PWA, staff/role management, offline sync — but the catalog/inventory model is boutique‑specific. It has the clearest proven comparable (Bumpa) and the clearest verified failure to learn from (Kippa).</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="index.html">Overview</a>
+      <a href="research.html">Research report</a>
+      <a href="prototype-mobile.html">Mobile prototype</a>
+      <a href="prototype-web.html">Web prototype</a>
+      <a href="https://github.com/mosesdex/medja" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p style="font-size:13px">Boutika · startup document · July 2026. Companion: the confidence‑graded <a href="research.html">research report</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

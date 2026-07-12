@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boutika — Run your boutique. Sell everywhere.</title>
+<meta name="description" content="Boutika is a business-management + storefront SaaS for Nigerian boutique owners. Know your stock, your money, and who owes you — then sell everywhere. Research, startup doc and prototypes.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --primary:#A4123F;--primary-dark:#7E0E30;--rose:#C2185B;--rose-soft:#FCE7EF;
+  --gold:#B8862B;--gold-soft:#FBF1DC;--ink:#211A1D;--fg:#2C2327;--muted:#7A6B71;
+  --bg:#FBF7F3;--card:#FFFFFF;--cream:#F4ECE3;--border:#EADFD6;--border2:#E2D3C7;
+  --green:#3F7A5C;--green-soft:#E7F2EC;
+  --radius:18px;--shadow:0 1px 3px rgba(33,26,29,.06),0 10px 30px rgba(33,26,29,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;line-height:1.16;color:var(--ink);letter-spacing:-.01em}
+a{color:var(--primary);text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--primary);background:var(--rose-soft);border-radius:999px;padding:7px 14px}
+header{position:sticky;top:0;background:rgba(251,247,243,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:50}
+.navbar{display:flex;align-items:center;gap:22px;padding:13px 0}
+.brand{display:flex;align-items:center;gap:11px;font-family:'Fraunces';font-weight:700;font-size:20px;color:var(--ink)}
+.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(140deg,var(--primary),var(--rose));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px;font-family:'Fraunces'}
+.navlinks{display:none;gap:22px;margin-left:auto;align-items:center}
+.navlinks a{font-size:13.5px;font-weight:600;color:var(--muted)}.navlinks a:hover{color:var(--ink)}
+@media(min-width:820px){.navlinks{display:flex}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 21px;border-radius:12px;font-size:14.5px;font-weight:600;transition:.15s;cursor:pointer;border:none;font-family:'Inter'}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-outline{background:var(--card);border:1.5px solid var(--border2);color:var(--ink)}.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn.sm{padding:9px 15px;font-size:13px}
+
+.hero{padding:76px 0 60px;text-align:center;background:radial-gradient(1000px 460px at 50% -20%,var(--rose-soft),transparent)}
+.hero h1{font-size:clamp(36px,7vw,64px);font-weight:700;max-width:900px;margin:22px auto 20px}
+.hero h1 em{font-style:italic;color:var(--primary)}
+.hero .lead{max-width:640px;margin:0 auto 30px;color:var(--muted);font-size:18.5px}
+.herobtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.herostats{display:flex;justify-content:center;margin-top:52px;flex-wrap:wrap;border:1px solid var(--border);border-radius:18px;background:var(--card);overflow:hidden;box-shadow:var(--shadow);max-width:840px;margin-left:auto;margin-right:auto}
+.herostats div{padding:20px 26px;border-right:1px solid var(--border);flex:1;min-width:150px}
+.herostats div:last-child{border-right:none}
+.herostats b{display:block;font-family:'Fraunces';font-size:26px;color:var(--primary);font-weight:700}
+.herostats span{font-size:12px;color:var(--muted);font-weight:500;line-height:1.4;display:block;margin-top:4px}
+
+section{padding:64px 0}
+.sechead{max-width:660px;margin:0 auto 40px;text-align:center}
+.sechead h2{font-size:clamp(26px,4.4vw,38px);margin:14px 0 12px}
+.sechead p{color:var(--muted);font-size:16px}
+
+/* deliverables */
+.deck{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.dcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;display:flex;flex-direction:column;transition:.16s}
+.dcard:hover{transform:translateY(-3px);border-color:var(--border2)}
+.dcard .ic{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:26px;background:var(--rose-soft);margin-bottom:16px}
+.dcard.g .ic{background:var(--gold-soft)}.dcard.c .ic{background:var(--green-soft)}.dcard.b .ic{background:#EAE4F2}
+.dcard h3{font-size:20px;margin-bottom:8px}
+.dcard p{font-size:14px;color:var(--muted);flex:1;margin-bottom:18px}
+.dcard .go{font-size:14px;font-weight:700;color:var(--primary);display:inline-flex;align-items:center;gap:6px}
+
+/* pillars */
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.pillar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+.pillar .em{font-size:28px;margin-bottom:12px}
+.pillar h3{font-size:17px;margin-bottom:7px}
+.pillar p{font-size:14px;color:var(--muted)}
+
+/* dark facts */
+.dark{background:var(--ink);color:#EADFD6}
+.dark .sechead h2{color:#fff}.dark .sechead p{color:#B9A7AE}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.fact{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:15px;padding:22px}
+.fact .n{font-family:'Fraunces';font-size:34px;color:var(--rose);font-weight:700}
+.fact .t{font-size:13.5px;color:#D8C9CF;margin-top:6px}
+.fact .v{font-size:11px;color:#8FD0AC;font-weight:700;margin-top:8px}
+
+/* wedge */
+.wedge{background:var(--cream);border-radius:22px;padding:44px 40px;text-align:center;max-width:840px;margin:0 auto}
+.wedge .q{font-family:'Fraunces';font-style:italic;font-size:clamp(20px,3vw,27px);color:var(--ink);line-height:1.4}
+.flow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.flow .s{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:10px 15px;font-size:13.5px;font-weight:600}
+.flow .a{color:var(--rose);font-weight:700}
+
+footer{background:var(--ink);color:#B9A7AE;padding:44px 0;text-align:center}
+footer a{color:var(--rose);font-weight:600}
+.foot-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+.foot-links a{font-size:14px}
+.portfolio{font-size:13px;color:#8B7880;margin-top:10px}
+.portfolio a{color:var(--rose)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap navbar">
+    <a href="index.html" class="brand"><span class="logo">B</span> Boutika</a>
+    <nav class="navlinks">
+      <a href="research.html">Research</a>
+      <a href="startup.html">Startup doc</a>
+      <a href="prototype-mobile.html">Mobile</a>
+      <a href="prototype-web.html">Web app</a>
+    </nav>
+    <a href="startup.html" class="btn btn-primary sm" style="margin-left:auto">Read the pitch</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">◆ Business-management + storefront SaaS · Nigeria</span>
+    <h1>Run your boutique. <em>Sell everywhere.</em></h1>
+    <p class="lead">Nigerian boutique owners run real businesses on memory, a notebook, and WhatsApp. Boutika gives them one place to know their stock, their money, and who owes them — then sell from the same catalog. Management first; selling attached on top.</p>
+    <div class="herobtns">
+      <a href="research.html" class="btn btn-primary">Read the research →</a>
+      <a href="prototype-mobile.html" class="btn btn-outline">Open the prototype</a>
+    </div>
+    <div class="herostats">
+      <div><b>44%</b><span>of informal owners earn &lt;₦20k/day — the price ceiling ✅</span></div>
+      <div><b>48%</b><span>restock by bank transfer — transfer-first ✅</span></div>
+      <div><b>100k+</b><span>Bumpa installs — the model is proven ✅</span></div>
+      <div><b>500k</b><span>merchants Kippa reached free — then couldn't monetise ✅</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Deliverables -->
+<section id="deliverables">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow">Everything in this project</span>
+      <h2>Four deliverables, one product thesis</h2>
+      <p>Built from a multi-agent deep-research pass — 20 sources, 98 claims, 25 adversarially verified. Every figure is confidence-graded.</p>
+    </div>
+    <div class="deck">
+      <a href="research.html" class="dcard">
+        <div class="ic">📑</div>
+        <h3>Research report</h3>
+        <p>How Nigerian boutiques operate, what hurts, who competes (Bumpa vs Kippa), payments, buyer behavior, and pricing tolerance — all confidence-graded ✅🟡❌.</p>
+        <span class="go">Read the research →</span>
+      </a>
+      <a href="startup.html" class="dcard g">
+        <div class="ic">🚀</div>
+        <h3>Startup document</h3>
+        <p>The pitch: problem, product tiers, business model, go-to-market, competition & moat, and a phased roadmap with hard exit tests.</p>
+        <span class="go">Read the startup doc →</span>
+      </a>
+      <a href="prototype-mobile.html" class="dcard c">
+        <div class="ic">📱</div>
+        <h3>Mobile prototype</h3>
+        <p>Clickable: the owner's business-management app (sales, variant stock, debtors, staff, restock) <em>and</em> the buyer storefront. Tap through both.</p>
+        <span class="go">Open the mobile app →</span>
+      </a>
+      <a href="prototype-web.html" class="dcard b">
+        <div class="ic">💻</div>
+        <h3>Web back-office</h3>
+        <p>The desktop dashboard: KPIs, sales by channel, variant inventory, the debtor recovery ledger, storefront orders, and staff accountability.</p>
+        <span class="go">Open the web app →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- What it does -->
+<section id="what" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow">The product</span>
+      <h2>Management first. Selling second.</h2>
+      <p>Exactly the priority in the brief — and the priority the research supports. She's not asking for a website; she's asking to stop losing money she can't see.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar"><div class="em">🧾</div><h3>Know your money</h3><p>One-tap sale logging (cash or transfer), daily takings, expenses, and rough profit in plain language — no accounting required.</p></div>
+      <div class="pillar"><div class="em">📦</div><h3>Know your stock</h3><p>Variant inventory (size × colour) plus a one-of-one thrift mode. Auto-decrements on every sale; alerts before you run out.</p></div>
+      <div class="pillar"><div class="em">📒</div><h3>Know who owes you</h3><p>A live debtor ledger with one-tap WhatsApp reminders. Credit selling is a Nigerian reality — Boutika makes the debt collectable.</p></div>
+      <div class="pillar"><div class="em">🔒</div><h3>Know your staff</h3><p>Each attendant logs under their own PIN; every sale, discount and stock edit is attributed — the verified defence against shrinkage.</p></div>
+      <div class="pillar"><div class="em">🛍️</div><h3>Sell everywhere</h3><p>Your catalog becomes <code>hername.boutika.shop</code> with WhatsApp checkout — a toggle, not a second app. Orders drop back into stock automatically.</p></div>
+      <div class="pillar"><div class="em">🧳</div><h3>Restock smarter</h3><p>A trip planner ranks re-orders by what actually sold and margin — turning the owner's biggest cash gamble into a shopping list.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Facts -->
+<section class="dark">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow" style="background:rgba(194,24,91,.18);color:#F3A9C4">The evidence</span>
+      <h2>Grounded in verified numbers</h2>
+      <p>Not vibes — adversarially verified claims, each confirmed by three independent skeptic reviewers.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><div class="n">3</div><div class="t">hidden losses from managing by memory: revenue leakage, stock mismanagement, unrecorded debts</div><div class="v">✅ VERIFIED · IRJMS 2026</div></div>
+      <div class="fact"><div class="n">0</div><div class="t">defences against staff theft in many Nigerian SMEs</div><div class="v">✅ VERIFIED · JFC 2018</div></div>
+      <div class="fact"><div class="n">₦5k</div><div class="t">Bumpa's price floor — our ceiling to undercut with a free tier</div><div class="v">✅ VERIFIED · getbumpa.com</div></div>
+      <div class="fact"><div class="n">₦25→₦35</div><div class="t">Kippa's failed price rise — a ₦10 bump forced a full revert. Price sensitivity is the master constraint</div><div class="v">✅ VERIFIED · TechCabal</div></div>
+    </div>
+    <p style="text-align:center;margin-top:26px;font-size:14px;color:#B9A7AE">See the full ledger — including 2 refuted claims we deliberately drop — in the <a href="research.html" style="color:var(--rose);font-weight:600">research report</a>.</p>
+  </div>
+</section>
+
+<!-- Wedge -->
+<section id="wedge">
+  <div class="wrap">
+    <div class="wedge">
+      <span class="eyebrow">The wedge</span>
+      <p class="q" style="margin-top:16px">"Boutika is the operating system for your boutique. Know your stock, your money, and who owes you — then sell everywhere from the same place."</p>
+      <div class="flow">
+        <span class="s">Land free</span><span class="a">→</span>
+        <span class="s">Beat the notebook</span><span class="a">→</span>
+        <span class="s">Recover her money</span><span class="a">→</span>
+        <span class="s">Convert to Pro</span><span class="a">→</span>
+        <span class="s">Turn on selling</span>
+      </div>
+      <p style="color:var(--muted);font-size:14.5px;margin-top:22px;max-width:600px;margin-left:auto;margin-right:auto">Win the back office for the fashion vertical specifically — where the incumbent is generic — and selling becomes a feature she turns on, not a product you have to sell her.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="research.html">Research report</a>
+      <a href="startup.html">Startup document</a>
+      <a href="prototype-mobile.html">Mobile prototype</a>
+      <a href="prototype-web.html">Web prototype</a>
+      <a href="https://github.com/mosesdex/medja" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p style="font-size:13px">Boutika · research & concept, July 2026. Figures confidence-graded; revalidate the Nigerian macro environment before launch.</p>
+    <p class="portfolio">Part of a startup-exploration portfolio alongside <a href="../index.html">Medja</a> (cleaning companies) and Handwork (building trades).</p>
+  </div>
+</footer>
+
+</body>
+</html>

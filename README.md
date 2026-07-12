@@ -24,3 +24,16 @@ Next.js (TypeScript) PWA · Supabase (Postgres + Auth + Storage + RLS) · Tailwi
 ## Status
 
 Pre-code: research ✅ · design spec ✅ · prototype ✅ · implementation plan next.
+
+---
+
+## Related startup explorations
+
+This repo also hosts other Nigerian-market startup concepts explored in the same research-first style:
+
+| Concept | What it is | Where |
+|---|---|---|
+| **Boutika** | Business-management + storefront SaaS for Nigerian **boutique / fashion retail** owners (management first, selling second) | [Website](boutika/index.html) · [Research](docs/research-nigeria-boutique-saas.md) · [Startup doc](docs/boutika-startup-doc.md) · [Mobile](boutika/prototype-mobile.html) · [Web](boutika/prototype-web.html) |
+| **Handwork** | B2B verified-workforce platform for Nigeria's **building trades** | [Startup doc](docs/handwork-startup-doc.md) |
+
+Live sites (GitHub Pages): **[Medja](https://mosesdex.github.io/medja/)** · **[Boutika](https://mosesdex.github.io/medja/boutika/)**

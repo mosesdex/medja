@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boutika — Mobile Prototype</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --primary:#A4123F;--primary-dark:#7E0E30;--rose:#C2185B;--rose-soft:#FCE7EF;
+  --gold:#B8862B;--gold-soft:#FBF1DC;--ink:#211A1D;--fg:#2C2327;--muted:#7A6B71;
+  --bg:#FBF7F3;--card:#FFFFFF;--cream:#F4ECE3;--border:#EADFD6;--border2:#E2D3C7;
+  --green:#3F7A5C;--green-soft:#E7F2EC;--red:#C0392B;--red-soft:#FBE9E7;
+  --radius:15px;--shadow:0 1px 3px rgba(33,26,29,.07),0 5px 16px rgba(33,26,29,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:#D8C8BC;color:var(--fg);display:flex;align-items:center;justify-content:center;min-height:100dvh;padding:22px;gap:26px;flex-wrap:wrap}
+h1,h2,h3,h4{font-family:'Fraunces',serif;color:var(--ink)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--primary);outline-offset:2px;border-radius:8px}
+.stage{display:flex;gap:26px;flex-wrap:wrap;align-items:center;justify-content:center}
+.phonewrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.phonelabel{font-size:12.5px;font-weight:700;color:#6B5B52;letter-spacing:.04em;text-transform:uppercase}
+.phone{width:384px;max-width:94vw;height:812px;max-height:92dvh;background:var(--bg);border-radius:38px;
+  box-shadow:0 24px 60px rgba(33,26,29,.34),0 0 0 10px var(--ink);overflow:hidden;position:relative;display:flex;flex-direction:column}
+@media(max-width:840px){.phone{height:760px}}
+.statusbar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12.5px;font-weight:600;color:var(--ink);flex:none}
+.app{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:14px 16px 96px;display:none;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{display:block;animation:fade .22s ease-out}
+@keyframes fade{from{opacity:.3;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.apphead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(140deg,var(--primary),var(--rose));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces';font-weight:700;font-size:19px}
+.who{font-size:11.5px;color:var(--muted)}
+.co{font-family:'Fraunces';font-weight:700;font-size:15px}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;border:1.5px solid var(--border2)}
+.backrow{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.backbtn{width:40px;height:40px;border-radius:12px;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--ink);font-size:18px}
+.backrow h2{font-size:18px}
+
+.hero-card{background:linear-gradient(145deg,var(--primary),#6E0D2A);color:#fff;border-radius:18px;padding:18px 18px 16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.hero-card .lbl{font-size:12px;opacity:.85;font-weight:500}
+.hero-card .big{font-family:'Fraunces';font-size:30px;font-weight:700;margin:3px 0 2px}
+.hero-card .sub{font-size:12.5px;opacity:.9}
+.hero-card .row{display:flex;gap:10px;margin-top:14px}
+.hero-card .mini{flex:1;background:rgba(255,255,255,.14);border-radius:11px;padding:9px 11px}
+.hero-card .mini .n{font-family:'Fraunces';font-weight:700;font-size:17px}
+.hero-card .mini .t{font-size:10.5px;opacity:.85;margin-top:1px}
+
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px 13px;box-shadow:var(--shadow)}
+.stat .n{font-family:'Fraunces';font-weight:700;font-size:19px}
+.stat .l{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3}
+.stat.red .n{color:var(--red)}.stat.green .n{color:var(--green)}.stat.gold .n{color:var(--gold)}
+
+.sectionrow{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 9px}
+.sectionrow h3{font-size:14.5px}
+.sectionrow button{font-size:12.5px;color:var(--primary);font-weight:600;padding:5px}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:13px;margin-bottom:10px}
+.li{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;margin-bottom:9px;width:100%;text-align:left}
+.li:active{background:var(--cream)}
+.thumb{width:46px;height:46px;border-radius:11px;flex:none;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--rose-soft)}
+.thumb.g{background:var(--gold-soft)}.thumb.c{background:var(--green-soft)}.thumb.b{background:#EAE4F2}
+.li .meta{flex:1;min-width:0}
+.li .meta .t{font-weight:700;font-size:14px;margin-bottom:2px}
+.li .meta .s{font-size:12px;color:var(--muted);display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.li .right{text-align:right;flex:none}
+.li .right .amt{font-family:'Fraunces';font-weight:700;font-size:14.5px}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;border-radius:999px;padding:3px 8px;letter-spacing:.02em}
+.b-in{background:var(--green-soft);color:var(--green)}
+.b-low{background:var(--gold-soft);color:var(--gold)}
+.b-out{background:var(--red-soft);color:var(--red)}
+.b-owe{background:var(--red-soft);color:var(--red)}
+.b-paid{background:var(--green-soft);color:var(--green)}
+.b-1of1{background:#EAE4F2;color:#6D4AA8}
+.b-cash{background:var(--cream);color:var(--muted)}
+.b-transfer{background:var(--rose-soft);color:var(--rose)}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;border-radius:13px;font-size:15px;font-weight:600}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:active{background:var(--primary-dark)}
+.btn-green{background:var(--green);color:#fff}
+.btn-out{background:var(--card);border:1.5px solid var(--border2);color:var(--ink)}
+.btn-wa{background:#25D366;color:#fff}
+.btn.sm{min-height:42px;font-size:13.5px;border-radius:11px}
+.btnrow{display:flex;gap:9px}
+
+.fab{position:absolute;bottom:88px;right:18px;width:58px;height:58px;border-radius:18px;background:var(--primary);color:#fff;font-size:28px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(164,18,63,.4);z-index:10}
+.fab:active{background:var(--primary-dark)}
+
+.tabbar{position:absolute;bottom:0;left:0;right:0;height:72px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--border);display:flex;padding:6px 8px 10px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--muted);border-radius:12px}
+.tab .ic{font-size:20px}
+.tab.on{color:var(--primary)}
+
+/* form bits */
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--fg);margin-bottom:6px}
+.input{width:100%;background:var(--card);border:1.5px solid var(--border2);border-radius:12px;padding:13px 14px;font-size:15px;font-family:inherit;color:var(--ink)}
+.input:focus{outline:none;border-color:var(--primary)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:9px 15px;border-radius:11px;border:1.5px solid var(--border2);background:var(--card);font-size:13.5px;font-weight:600;color:var(--fg)}
+.chip.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chip.sz{min-width:44px;text-align:center;padding:9px 0}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:6px}
+.numkey{background:var(--card);border:1.5px solid var(--border);border-radius:13px;padding:15px 0;font-size:20px;font-weight:600;font-family:'Fraunces';color:var(--ink)}
+.numkey:active{background:var(--cream)}
+
+.pill{display:inline-block;font-size:11px;font-weight:700;color:var(--primary);background:var(--rose-soft);border-radius:999px;padding:4px 11px;margin-bottom:10px}
+.helper{font-size:12px;color:var(--muted);line-height:1.5;margin-top:6px}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.rowline{display:flex;justify-content:space-between;font-size:13.5px;padding:7px 0}
+.rowline .k{color:var(--muted)}.rowline .v{font-weight:600}
+.total{display:flex;justify-content:space-between;font-family:'Fraunces';font-weight:700;font-size:19px;padding-top:10px;margin-top:4px;border-top:1.5px solid var(--border)}
+
+/* buyer storefront */
+.store-hero{background:linear-gradient(160deg,#2A1F24,#4A2032);color:#fff;border-radius:0 0 22px 22px;padding:20px 16px 22px;margin:-14px -16px 14px}
+.store-hero .name{font-family:'Fraunces';font-size:22px;font-weight:700;display:flex;align-items:center;gap:8px}
+.store-hero .verified{font-size:12px;background:rgba(63,122,92,.35);color:#8FD0AC;border-radius:999px;padding:3px 9px;font-weight:600}
+.store-hero .bio{font-size:13px;opacity:.9;margin-top:5px}
+.store-hero .metrics{display:flex;gap:16px;margin-top:12px;font-size:12px}
+.store-hero .metrics b{font-family:'Fraunces';font-size:15px;display:block}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.product{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);text-align:left}
+.product .img{height:120px;background:var(--rose-soft);display:flex;align-items:center;justify-content:center;font-size:44px}
+.product .img.g{background:var(--gold-soft)}.product .img.c{background:var(--green-soft)}.product .img.b{background:#EAE4F2}
+.product .pi{padding:10px 11px}
+.product .pn{font-size:12.5px;font-weight:600;line-height:1.3;margin-bottom:3px}
+.product .pp{font-family:'Fraunces';font-weight:700;font-size:14px;color:var(--primary)}
+.product .po{font-size:10.5px;color:var(--muted);margin-top:3px}
+
+.toast{position:absolute;bottom:88px;left:16px;right:16px;background:var(--ink);color:#fff;border-radius:13px;padding:13px 16px;font-size:13.5px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.3);opacity:0;transform:translateY(10px);transition:.25s;z-index:20;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.mode-switch{display:flex;gap:0;background:var(--cream);border-radius:12px;padding:3px;margin-bottom:14px}
+.mode-switch button{flex:1;padding:9px;font-size:12.5px;font-weight:600;border-radius:9px;color:var(--muted)}
+.mode-switch button.on{background:var(--card);color:var(--primary);box-shadow:var(--shadow)}
+.note{background:var(--gold-soft);border:1px solid #E9D3A0;border-radius:11px;padding:11px 13px;font-size:12px;color:#6B5220;margin-bottom:12px}
+.legendbar{max-width:520px;font-size:12.5px;color:#5A4B43;text-align:center;line-height:1.6}
+.legendbar a{color:var(--primary);font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="stage">
+<!-- ============ OWNER APP ============ -->
+<div class="phonewrap">
+  <div class="phonelabel">👩🏾‍💼 Owner — business management</div>
+  <div class="phone">
+    <div class="statusbar"><span>9:41</span><span>Boutika</span><span>▮▮▮ 87%</span></div>
+    <div class="app">
+      <div class="screens">
+
+        <!-- HOME / TODAY -->
+        <div class="screen active" id="s-home">
+          <div class="apphead">
+            <div class="brand"><span class="logo">B</span><div><div class="who">Good morning,</div><div class="co">Amaka's Closet</div></div></div>
+            <button class="avatar" onclick="go('s-staff')">A</button>
+          </div>
+          <div class="hero-card">
+            <div class="lbl">Today's sales · Sat 12 Jul</div>
+            <div class="big">₦84,500</div>
+            <div class="sub">14 sales · ₦12,000 still owed to you</div>
+            <div class="row">
+              <div class="mini"><div class="n">₦58k</div><div class="t">Cash</div></div>
+              <div class="mini"><div class="n">₦26.5k</div><div class="t">Transfer</div></div>
+              <div class="mini"><div class="n">+₦31k</div><div class="t">Est. profit</div></div>
+            </div>
+          </div>
+          <div class="statgrid">
+            <button class="stat gold" onclick="go('s-inventory')"><div class="n">3 items</div><div class="l">Low or out of stock →</div></button>
+            <button class="stat red" onclick="go('s-debtors')"><div class="n">₦47,000</div><div class="l">Owed by 5 customers →</div></button>
+          </div>
+          <div class="sectionrow"><h3>Recent sales</h3><button onclick="go('s-inventory')">Inventory</button></div>
+          <button class="li" onclick="go('s-sale-detail')">
+            <div class="thumb">👗</div>
+            <div class="meta"><div class="t">Ankara midi dress · M</div><div class="s">2:14pm · by Blessing <span class="badge b-transfer">Transfer</span></div></div>
+            <div class="right"><div class="amt">₦18,000</div></div>
+          </button>
+          <div class="li">
+            <div class="thumb g">👜</div>
+            <div class="meta"><div class="t">Faux‑leather tote</div><div class="s">1:02pm · by You <span class="badge b-cash">Cash</span></div></div>
+            <div class="right"><div class="amt">₦9,500</div></div>
+          </div>
+          <button class="li" onclick="go('s-debtors')">
+            <div class="thumb c">👠</div>
+            <div class="meta"><div class="t">Block heels · 40</div><div class="s">11:40am · by Blessing <span class="badge b-owe">Owes ₦7,000</span></div></div>
+            <div class="right"><div class="amt">₦15,000</div></div>
+          </button>
+          <div class="note">🔵 The whole home screen answers the 3 questions she can't answer today: <b>how much did I make, what's running out, who owes me.</b></div>
+        </div>
+
+        <!-- QUICK SALE -->
+        <div class="screen" id="s-sale">
+          <div class="backrow"><button class="backbtn" onclick="go('s-home')">←</button><h2>Record a sale</h2></div>
+          <span class="pill">⚡ Under 5 seconds — beats the notebook</span>
+          <div class="field"><label>Item (type or tap)</label>
+            <div class="chips"><span class="chip on">Ankara midi</span><span class="chip">Tote bag</span><span class="chip">Heels</span><span class="chip">+ New</span></div>
+          </div>
+          <div class="field"><label>Size · Colour</label>
+            <div class="chips"><span class="chip sz">S</span><span class="chip sz on">M</span><span class="chip sz">L</span><span class="chip sz">XL</span></div>
+            <div class="chips" style="margin-top:8px"><span class="chip on">Wine</span><span class="chip">Navy</span><span class="chip">Black</span></div>
+          </div>
+          <div class="field"><label>Price</label><input class="input" value="₦18,000" readonly></div>
+          <div class="field"><label>Payment</label>
+            <div class="chips"><span class="chip">💵 Cash</span><span class="chip on">🏦 Transfer</span><span class="chip">📒 Credit (owes)</span></div>
+          </div>
+          <div class="helper">Stock auto‑decrements. Transfer sales wait for proof‑of‑payment confirmation before they count as paid.</div>
+          <div class="divider"></div>
+          <button class="btn btn-primary" onclick="toast('✓ Sale recorded · stock updated');go('s-home')">Record sale ₦18,000</button>
+        </div>
+
+        <!-- SALE DETAIL -->
+        <div class="screen" id="s-sale-detail">
+          <div class="backrow"><button class="backbtn" onclick="go('s-home')">←</button><h2>Sale details</h2></div>
+          <div class="card">
+            <div class="li" style="border:none;box-shadow:none;padding:0;margin:0"><div class="thumb">👗</div><div class="meta"><div class="t">Ankara midi dress</div><div class="s">Size M · Wine</div></div><div class="right"><div class="amt">₦18,000</div></div></div>
+            <div class="divider"></div>
+            <div class="rowline"><span class="k">Sold by</span><span class="v">Blessing (staff)</span></div>
+            <div class="rowline"><span class="k">Time</span><span class="v">2:14pm · Today</span></div>
+            <div class="rowline"><span class="k">Payment</span><span class="v">Transfer · <span class="badge b-paid">Confirmed</span></span></div>
+            <div class="rowline"><span class="k">Cost price</span><span class="v">₦11,500</span></div>
+            <div class="rowline"><span class="k">Profit</span><span class="v" style="color:var(--green)">+₦6,500</span></div>
+          </div>
+          <div class="note">🔵 Staff‑level attribution + cost tracking is what turns "I think we sold well" into "Blessing sold ₦6,500 profit at 2:14." Directly attacks the verified theft gap.</div>
+          <button class="btn btn-out" onclick="go('s-home')">Back to today</button>
+        </div>
+
+        <!-- INVENTORY -->
+        <div class="screen" id="s-inventory">
+          <div class="apphead"><div class="brand"><span class="logo">B</span><div class="co">Inventory</div></div><button class="chip on" onclick="go('s-add-product')">+ Add</button></div>
+          <div class="statgrid" style="grid-template-columns:1fr 1fr 1fr">
+            <div class="stat"><div class="n">128</div><div class="l">Items in stock</div></div>
+            <div class="stat gold"><div class="n">3</div><div class="l">Low stock</div></div>
+            <div class="stat red"><div class="n">1</div><div class="l">Out</div></div>
+          </div>
+          <div class="sectionrow"><h3>Needs restock</h3><button onclick="go('s-restock')">Plan trip →</button></div>
+          <div class="li"><div class="thumb">👗</div><div class="meta"><div class="t">Ankara midi dress</div><div class="s">Wine: 2 left · Navy: 0 <span class="badge b-low">Low</span></div></div><div class="right"><div class="amt">₦18k</div></div></div>
+          <div class="li"><div class="thumb g">👠</div><div class="meta"><div class="t">Block heels</div><div class="s">Size 40: 1 · Size 38: 0 <span class="badge b-low">Low</span></div></div><div class="right"><div class="amt">₦15k</div></div></div>
+          <div class="li"><div class="thumb b">🧥</div><div class="meta"><div class="t">Denim jacket (oversized)</div><div class="s">All sizes: 0 <span class="badge b-out">Out</span></div></div><div class="right"><div class="amt">₦22k</div></div></div>
+          <div class="sectionrow"><h3>Thrift · one‑of‑one</h3><button>See all</button></div>
+          <div class="li"><div class="thumb c">👚</div><div class="meta"><div class="t">Vintage silk blouse</div><div class="s">First‑grade okrika <span class="badge b-1of1">1 of 1</span></div></div><div class="right"><div class="amt">₦8k</div></div></div>
+          <div class="li"><div class="thumb b">👖</div><div class="meta"><div class="t">Mom jeans (W30)</div><div class="s">Grade A okrika <span class="badge b-1of1">1 of 1</span></div></div><div class="right"><div class="amt">₦6.5k</div></div></div>
+          <div class="note">🔵 Variant matrix (size × colour) <b>and</b> a one‑of‑one thrift mode — the boutique‑specific depth Bumpa treats generically.</div>
+        </div>
+
+        <!-- ADD PRODUCT -->
+        <div class="screen" id="s-add-product">
+          <div class="backrow"><button class="backbtn" onclick="go('s-inventory')">←</button><h2>Add product</h2></div>
+          <div class="field"><label>Photo</label>
+            <div class="card" style="display:flex;align-items:center;justify-content:center;height:96px;border-style:dashed;color:var(--muted);font-size:13px">📷 Snap or upload — auto‑fills the storefront</div>
+          </div>
+          <div class="field"><label>Name</label><input class="input" placeholder="e.g. Ankara midi dress"></div>
+          <div class="btnrow">
+            <div class="field" style="flex:1"><label>Cost price</label><input class="input" placeholder="₦11,500"></div>
+            <div class="field" style="flex:1"><label>Selling price</label><input class="input" placeholder="₦18,000"></div>
+          </div>
+          <div class="field"><label>Type</label>
+            <div class="chips"><span class="chip on">Sized (S–XL)</span><span class="chip">Shoe sizes</span><span class="chip">One‑of‑one (thrift)</span></div>
+          </div>
+          <div class="field"><label>Sizes in stock</label>
+            <div class="chips"><span class="chip sz on">S·3</span><span class="chip sz on">M·4</span><span class="chip sz on">L·2</span><span class="chip sz">XL</span></div>
+          </div>
+          <button class="btn btn-primary" onclick="toast('✓ Product added to stock + storefront');go('s-inventory')">Save product</button>
+        </div>
+
+        <!-- DEBTORS -->
+        <div class="screen" id="s-debtors">
+          <div class="apphead"><div class="brand"><span class="logo">B</span><div class="co">Who owes me</div></div><span class="badge b-owe" style="font-size:12px;padding:6px 11px">₦47,000</span></div>
+          <div class="note">📒 Credit selling is a Nigerian retail reality — the app just makes the debt <b>visible and collectable</b>. One tap sends a polite WhatsApp reminder.</div>
+          <button class="li" onclick="go('s-remind')">
+            <div class="avatar" style="background:var(--rose-soft);color:var(--rose)">C</div>
+            <div class="meta"><div class="t">Chioma A.</div><div class="s">Block heels · 12 days ago <span class="badge b-owe">Overdue</span></div></div>
+            <div class="right"><div class="amt" style="color:var(--red)">₦7,000</div></div>
+          </button>
+          <button class="li" onclick="go('s-remind')">
+            <div class="avatar" style="background:var(--rose-soft);color:var(--rose)">N</div>
+            <div class="meta"><div class="t">Ngozi (regular)</div><div class="s">2 dresses · 4 days ago</div></div>
+            <div class="right"><div class="amt" style="color:var(--red)">₦24,000</div></div>
+          </button>
+          <button class="li" onclick="go('s-remind')">
+            <div class="avatar" style="background:var(--rose-soft);color:var(--rose)">F</div>
+            <div class="meta"><div class="t">Funke B.</div><div class="s">Tote + scarf · 6 days ago</div></div>
+            <div class="right"><div class="amt" style="color:var(--red)">₦11,000</div></div>
+          </button>
+          <button class="li" onclick="go('s-remind')">
+            <div class="avatar" style="background:var(--rose-soft);color:var(--rose)">K</div>
+            <div class="meta"><div class="t">Kemi O.</div><div class="s">Jeans · 2 days ago</div></div>
+            <div class="right"><div class="amt" style="color:var(--red)">₦5,000</div></div>
+          </button>
+        </div>
+
+        <!-- REMIND -->
+        <div class="screen" id="s-remind">
+          <div class="backrow"><button class="backbtn" onclick="go('s-debtors')">←</button><h2>Send reminder</h2></div>
+          <div class="card">
+            <div class="rowline"><span class="k">Customer</span><span class="v">Chioma A.</span></div>
+            <div class="rowline"><span class="k">Owes</span><span class="v" style="color:var(--red)">₦7,000</span></div>
+            <div class="rowline"><span class="k">For</span><span class="v">Block heels (size 40)</span></div>
+            <div class="rowline"><span class="k">Since</span><span class="v">30 Jun · 12 days</span></div>
+          </div>
+          <div class="field"><label>WhatsApp message (editable)</label>
+            <div class="card" style="font-size:13.5px;color:var(--fg);line-height:1.55">Hi Chioma 😊 Just a gentle reminder about the ₦7,000 balance on your block heels from Amaka's Closet. You can transfer to <b>0123456789 · Amaka Stores</b>. Thank you! 🙏</div>
+          </div>
+          <button class="btn btn-wa" onclick="toast('✓ Opened in WhatsApp');go('s-debtors')">Send on WhatsApp</button>
+          <button class="btn btn-out" style="margin-top:9px" onclick="toast('✓ Marked as paid');go('s-debtors')">Mark as paid</button>
+        </div>
+
+        <!-- RESTOCK PLANNER -->
+        <div class="screen" id="s-restock">
+          <div class="backrow"><button class="backbtn" onclick="go('s-inventory')">←</button><h2>Restock trip</h2></div>
+          <span class="pill">🧳 Tier 2 · turns gut‑feel into a shopping list</span>
+          <div class="card">
+            <div style="font-size:13px;color:var(--muted);margin-bottom:4px">Based on 90 days of sales, before your Istanbul trip:</div>
+            <div class="rowline"><span class="k">👗 Ankara midi — Navy, M/L</span><span class="v">Buy 12</span></div>
+            <div class="rowline"><span class="k">👠 Block heels — 38, 40</span><span class="v">Buy 10</span></div>
+            <div class="rowline"><span class="k">🧥 Denim jacket — all sizes</span><span class="v">Buy 8</span></div>
+            <div class="rowline"><span class="k">👜 Faux‑leather tote</span><span class="v">Buy 6 (fast‑mover)</span></div>
+            <div class="total"><span>Est. budget</span><span>₦486,000</span></div>
+          </div>
+          <div class="note">🔵 The owner's biggest cash decision is the restock trip. Ranking by <b>what actually sold</b> and margin is the moat a notebook can never build.</div>
+          <button class="btn btn-primary" onclick="toast('✓ Shopping list saved');go('s-inventory')">Save shopping list</button>
+        </div>
+
+        <!-- STAFF -->
+        <div class="screen" id="s-staff">
+          <div class="backrow"><button class="backbtn" onclick="go('s-home')">←</button><h2>Staff & accountability</h2></div>
+          <div class="note">🔒 Each attendant logs under their own PIN. You see every sale, discount and stock change by person — the verified defence against shrinkage.</div>
+          <div class="li"><div class="avatar" style="background:var(--gold-soft);color:var(--gold)">B</div><div class="meta"><div class="t">Blessing</div><div class="s">Attendant · ₦46,000 sold today</div></div><div class="right"><span class="badge b-paid">Active</span></div></div>
+          <div class="li"><div class="avatar" style="background:var(--rose-soft);color:var(--rose)">T</div><div class="meta"><div class="t">Tobi</div><div class="s">Attendant · ₦12,500 sold today</div></div><div class="right"><span class="badge b-paid">Active</span></div></div>
+          <div class="card">
+            <div style="font-weight:700;font-size:13.5px;margin-bottom:8px">This week by staff</div>
+            <div class="rowline"><span class="k">Blessing</span><span class="v">₦248,000 · 3 discounts</span></div>
+            <div class="rowline"><span class="k">Tobi</span><span class="v">₦96,500 · 0 discounts</span></div>
+            <div class="rowline"><span class="k">You (owner)</span><span class="v">₦134,000</span></div>
+          </div>
+          <button class="btn btn-out" onclick="go('s-home')">Back</button>
+        </div>
+
+        <!-- SELL / STOREFRONT TOGGLE -->
+        <div class="screen" id="s-sell">
+          <div class="apphead"><div class="brand"><span class="logo">B</span><div class="co">Sell online</div></div></div>
+          <div class="hero-card" style="background:linear-gradient(145deg,var(--gold),#8A6420)">
+            <div class="lbl">Your storefront</div>
+            <div class="big" style="font-size:20px">amaka.boutika.shop</div>
+            <div class="sub">Live · 128 items synced from your inventory</div>
+          </div>
+          <div class="mode-switch">
+            <button class="on">Storefront ON</button><button>Off</button>
+          </div>
+          <div class="statgrid">
+            <div class="stat green"><div class="n">₦214k</div><div class="l">Online sales this month</div></div>
+            <div class="stat"><div class="n">37</div><div class="l">WhatsApp orders</div></div>
+          </div>
+          <div class="sectionrow"><h3>New online orders</h3><button>All</button></div>
+          <div class="li"><div class="thumb">👗</div><div class="meta"><div class="t">Ankara midi · M · Wine</div><div class="s">via Storefront <span class="badge b-transfer">Awaiting proof</span></div></div><div class="right"><div class="amt">₦18k</div></div></div>
+          <div class="li"><div class="thumb g">👜</div><div class="meta"><div class="t">Faux‑leather tote</div><div class="s">via Instagram <span class="badge b-paid">Confirmed</span></div></div><div class="right"><div class="amt">₦9.5k</div></div></div>
+          <div class="note">🔵 Selling is a <b>toggle</b>, not a separate app to learn. The catalog she already keeps becomes the shop — zero re‑entry. Orders drop straight back into sales + stock.</div>
+          <button class="btn btn-wa" onclick="switchToBuyer()">👀 Preview buyer storefront →</button>
+        </div>
+
+      </div><!-- /screens -->
+
+      <div class="fab" onclick="go('s-sale')">+</div>
+      <div class="tabbar">
+        <button class="tab on" data-s="s-home" onclick="tab(this,'s-home')"><span class="ic">🏠</span>Today</button>
+        <button class="tab" data-s="s-inventory" onclick="tab(this,'s-inventory')"><span class="ic">📦</span>Stock</button>
+        <button class="tab" data-s="s-debtors" onclick="tab(this,'s-debtors')"><span class="ic">📒</span>Debtors</button>
+        <button class="tab" data-s="s-sell" onclick="tab(this,'s-sell')"><span class="ic">🛍️</span>Sell</button>
+      </div>
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BUYER STOREFRONT ============ -->
+<div class="phonewrap">
+  <div class="phonelabel">🛒 Buyer — storefront & marketplace</div>
+  <div class="phone">
+    <div class="statusbar"><span>9:41</span><span>boutika.shop</span><span>▮▮▮ 87%</span></div>
+    <div class="app">
+      <div class="screens">
+        <div class="screen active" id="b-store">
+          <div class="store-hero">
+            <div class="name">Amaka's Closet <span class="verified">✓ Verified</span></div>
+            <div class="bio">Ready‑to‑wear · thrift · shoes · Lagos. Ships nationwide.</div>
+            <div class="metrics">
+              <div><b>4.8★</b>212 reviews</div>
+              <div><b>1.2k</b>orders</div>
+              <div><b>POD</b>available</div>
+            </div>
+          </div>
+          <div class="chips" style="margin-bottom:12px"><span class="chip on">All</span><span class="chip">Dresses</span><span class="chip">Thrift</span><span class="chip">Shoes</span><span class="chip">Bags</span></div>
+          <div class="pgrid">
+            <button class="product" onclick="go('b-product')"><div class="img">👗</div><div class="pi"><div class="pn">Ankara midi dress</div><div class="pp">₦18,000</div><div class="po">S · M · L · Wine/Navy</div></div></button>
+            <div class="product"><div class="img g">👠</div><div class="pi"><div class="pn">Block heels</div><div class="pp">₦15,000</div><div class="po">Size 38–41</div></div></div>
+            <div class="product"><div class="img c">👚</div><div class="pi"><div class="pn">Vintage silk blouse</div><div class="pp">₦8,000</div><div class="po">🟣 1 of 1 · thrift</div></div></div>
+            <div class="product"><div class="img b">🧥</div><div class="pi"><div class="pn">Denim jacket</div><div class="pp">₦22,000</div><div class="po">Restocking soon</div></div></div>
+            <div class="product"><div class="img g">👜</div><div class="pi"><div class="pn">Faux‑leather tote</div><div class="pp">₦9,500</div><div class="po">Fast mover 🔥</div></div></div>
+            <div class="product"><div class="img b">👖</div><div class="pi"><div class="pn">Mom jeans W30</div><div class="pp">₦6,500</div><div class="po">🟣 1 of 1 · thrift</div></div></div>
+          </div>
+          <div class="note" style="margin-top:14px">🔵 Trust is engineered in: <b>verified seller</b>, ratings, order count, and <b>pay‑on‑delivery</b> — the research‑backed answer to "what I ordered vs what I got."</div>
+        </div>
+
+        <div class="screen" id="b-product">
+          <div class="backrow"><button class="backbtn" onclick="go('b-store')">←</button><h2>Product</h2></div>
+          <div class="product" style="margin-bottom:14px"><div class="img" style="height:200px;font-size:80px">👗</div></div>
+          <h3 style="font-size:19px">Ankara midi dress</h3>
+          <div style="font-family:'Fraunces';font-weight:700;font-size:22px;color:var(--primary);margin:4px 0 2px">₦18,000</div>
+          <div class="helper">From Amaka's Closet · ✓ Verified · 4.8★</div>
+          <div class="field" style="margin-top:14px"><label>Size</label><div class="chips"><span class="chip sz">S</span><span class="chip sz on">M</span><span class="chip sz">L</span></div></div>
+          <div class="field"><label>Colour</label><div class="chips"><span class="chip on">Wine</span><span class="chip">Navy</span></div></div>
+          <div class="card">
+            <div class="rowline"><span class="k">Delivery (Lagos)</span><span class="v">₦2,500 · 1–2 days</span></div>
+            <div class="rowline"><span class="k">Payment</span><span class="v">Pay on delivery ✓</span></div>
+          </div>
+          <button class="btn btn-wa" onclick="toast('✓ Order sent to seller on WhatsApp')">💬 Order on WhatsApp</button>
+          <button class="btn btn-primary" style="margin-top:9px" onclick="toast('✓ Order placed · pay on delivery')">Buy now · pay on delivery</button>
+          <div class="note" style="margin-top:12px">🔵 The "Order on WhatsApp" button meets the buyer's real channel — and drops the order straight into the owner's sales + inventory automatically.</div>
+        </div>
+      </div>
+      <div class="toast" id="toast2"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="legendbar">
+  Clickable prototype · tap the <b>＋</b>, the tab bar, cards, and buttons. &nbsp;·&nbsp;
+  <a href="index.html">Overview</a> · <a href="research.html">Research</a> · <a href="startup.html">Startup doc</a> · <a href="prototype-web.html">Web prototype →</a>
+</div>
+
+<script>
+function go(id){
+  const scr=document.getElementById(id);
+  const phone=scr.closest('.app');
+  phone.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  scr.classList.add('active');
+  scr.scrollTop=0;
+  // sync tab highlight if in owner app
+  const tabs=phone.querySelectorAll('.tab');
+  tabs.forEach(t=>{t.classList.toggle('on',t.dataset.s===id);});
+}
+function tab(el,id){go(id);}
+function toast(msg){
+  const app=event.target.closest('.app');
+  const t=app.querySelector('.toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function switchToBuyer(){
+  document.querySelectorAll('.phone')[1].scrollIntoView({behavior:'smooth',block:'center'});
+  toast('👉 See the buyer storefront on the right');
+}
+</script>
+</body>
+</html>
