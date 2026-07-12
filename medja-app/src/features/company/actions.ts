@@ -15,6 +15,23 @@ function normalizeSlug(input: string): string {
     .slice(0, 40);
 }
 
+/** Update the company's display profile (name, city). Owner only. */
+export async function updateCompanyProfile(formData: FormData) {
+  const member = await getMember();
+  if (!member) throw new Error("No company");
+  if (member.role !== "owner") throw new Error("Only owners can change this");
+  const supabase = await createServerClient();
+
+  const name = String(formData.get("name") ?? "").trim();
+  if (!name) throw new Error("Company name is required");
+  const { error } = await supabase
+    .from("companies")
+    .update({ name, city: String(formData.get("city") ?? "").trim() || null })
+    .eq("id", member.companyId);
+  if (error) throw new Error(error.message);
+  revalidatePath("/settings");
+}
+
 /** Set the company's public booking slug (owner only). */
 export async function setCompanySlug(formData: FormData) {
   const member = await getMember();

@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { addSite } from "@/features/clients/actions";
-import { Badge, Naira } from "@/components/ui";
+import { Badge, Naira, StatTile } from "@/components/ui";
+import { formatNaira } from "@/lib/money";
+import { waLink } from "@/lib/whatsapp";
 
 export default async function ClientDetailPage({
   params,
@@ -31,6 +33,21 @@ export default async function ClientDetailPage({
     .order("scheduled_at", { ascending: false })
     .limit(10);
 
+  const { data: invoices } = await supabase
+    .from("invoices")
+    .select("total_kobo, deposit_kobo, status")
+    .eq("client_id", id);
+  const lifetimeKobo = (invoices ?? [])
+    .filter((i) => i.status === "paid")
+    .reduce((s, i) => s + i.total_kobo, 0);
+  const outstandingKobo = (invoices ?? [])
+    .filter((i) => i.status !== "paid")
+    .reduce((s, i) => s + (i.total_kobo - i.deposit_kobo), 0);
+
+  const wa = client.phone
+    ? waLink(client.phone, `Hello ${client.name}, `)
+    : null;
+
   const field =
     "mt-1 w-full rounded-xl border border-line px-4 py-3 text-base outline-none focus:border-primary";
 
@@ -46,6 +63,17 @@ export default async function ClientDetailPage({
         </div>
         <Badge value={client.kind} />
       </header>
+
+      <div className="mb-4 grid grid-cols-2 gap-3">
+        <StatTile label="Lifetime value" value={formatNaira(lifetimeKobo)} tone="green" />
+        <StatTile label="Outstanding" value={formatNaira(outstandingKobo)} tone={outstandingKobo > 0 ? "amber" : "default"} />
+      </div>
+
+      {wa && (
+        <a href={wa} target="_blank" rel="noopener" className="btn-outline mb-4 w-full">
+          Message on WhatsApp
+        </a>
+      )}
 
       <section className="mb-4">
         <h2 className="mb-2 font-display text-base font-semibold">Sites</h2>
