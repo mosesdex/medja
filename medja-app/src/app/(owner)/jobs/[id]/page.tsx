@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { Badge, Naira } from "@/components/ui";
 import { Checklist } from "@/features/jobs/Checklist";
+import { AssignControl } from "@/features/dispatch/AssignControl";
 import { waLink } from "@/lib/whatsapp";
 
 export default async function JobCardPage({
@@ -27,6 +28,16 @@ export default async function JobCardPage({
     .select("id, label, done")
     .eq("job_id", id)
     .order("position");
+
+  const { data: allStaff } = await supabase
+    .from("staff_profiles")
+    .select("id, name")
+    .order("name");
+  const { data: assigned } = await supabase
+    .from("job_assignments")
+    .select("staff_id")
+    .eq("job_id", id);
+  const assignedIds = (assigned ?? []).map((a) => a.staff_id as string);
 
   const client = job.clients as unknown as {
     name: string;
@@ -76,6 +87,14 @@ export default async function JobCardPage({
           <Row k="Value" v={<Naira kobo={job.value_kobo} />} />
           {job.notes && <Row k="Notes" v={job.notes} />}
         </dl>
+      </div>
+
+      <div className="mb-3">
+        <AssignControl
+          jobId={id}
+          allStaff={(allStaff ?? []) as { id: string; name: string }[]}
+          assignedIds={assignedIds}
+        />
       </div>
 
       {items && items.length > 0 && <Checklist jobId={id} items={items} />}
