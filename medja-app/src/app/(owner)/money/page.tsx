@@ -33,6 +33,15 @@ export default async function MoneyPage() {
         </Link>
       </header>
 
+      <div className="mb-4 flex gap-2">
+        <Link href="/money/contracts" className="btn-outline flex-1 text-sm">
+          Contracts
+        </Link>
+        <Link href="/money/expenses" className="btn-outline flex-1 text-sm">
+          Expenses
+        </Link>
+      </div>
+
       <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-3">
         <StatTile label="Collected" value={formatNaira(collected)} tone="green" />
         <StatTile label="Outstanding" value={formatNaira(outstanding)} tone="amber" />

@@ -5,6 +5,7 @@ import { Badge, Naira } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
 import { waLink } from "@/lib/whatsapp";
 import { MarkPaidButton } from "./MarkPaidButton";
+import { PayButton } from "@/features/payments/PayButton";
 
 export default async function InvoiceDetailPage({
   params,
@@ -31,11 +32,14 @@ export default async function InvoiceDetailPage({
   const client = inv.clients as unknown as { name: string; phone: string | null } | null;
   const balance = inv.total_kobo - inv.deposit_kobo;
 
+  const overdue = inv.status === "overdue";
   const wa =
     client?.phone &&
     waLink(
       client.phone,
-      `Hello ${client.name}, here is invoice ${inv.number} from us. Balance due: ${formatNaira(balance)}. Thank you.`,
+      overdue
+        ? `Hello ${client.name}, a friendly reminder that invoice ${inv.number} (balance ${formatNaira(balance)}) is now due. You can pay by card, transfer or USSD. Thank you.`
+        : `Hello ${client.name}, here is invoice ${inv.number} from us. Balance due: ${formatNaira(balance)}. Thank you.`,
     );
 
   return (
@@ -74,16 +78,22 @@ export default async function InvoiceDetailPage({
         </div>
       </div>
 
-      <div className="mt-3 flex gap-2">
+      {inv.status !== "paid" && (
+        <div className="mt-3">
+          <PayButton invoiceId={inv.id} />
+        </div>
+      )}
+      <div className="mt-2 flex gap-2">
         {wa && (
           <a href={wa} target="_blank" rel="noopener" className="btn-outline flex-1">
-            Send via WhatsApp
+            {overdue ? "Send reminder" : "Send via WhatsApp"}
           </a>
         )}
         {inv.status !== "paid" && <MarkPaidButton invoiceId={inv.id} />}
       </div>
       <p className="mt-3 text-center text-xs text-muted">
-        Paystack card / transfer / USSD payment links arrive in Phase 3.
+        Paystack link accepts card, bank transfer and USSD; the webhook marks the
+        invoice paid automatically.
       </p>
     </div>
   );
