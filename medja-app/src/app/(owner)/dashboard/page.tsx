@@ -2,12 +2,28 @@ import Link from "next/link";
 import { getMember } from "@/lib/auth";
 import { dashboardSummary } from "@/features/dashboard/queries";
 import { RevenueChart } from "@/features/dashboard/RevenueChart";
+import { GettingStarted } from "@/features/dashboard/GettingStarted";
 import { Badge, Naira, StatTile, EmptyState } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
+import { createServerClient } from "@/lib/supabase/server";
 
 export default async function DashboardPage() {
   const member = await getMember();
   const s = await dashboardSummary();
+
+  const supabase = await createServerClient();
+  const [clientsC, staffC, jobsC, company] = await Promise.all([
+    supabase.from("clients").select("id", { count: "exact", head: true }),
+    supabase.from("staff_profiles").select("id", { count: "exact", head: true }),
+    supabase.from("jobs").select("id", { count: "exact", head: true }),
+    supabase.from("companies").select("slug").eq("id", member?.companyId ?? "").maybeSingle(),
+  ]);
+  const setupSteps = [
+    { done: (clientsC.count ?? 0) > 0, label: "Add your first client", href: "/clients/new" },
+    { done: (staffC.count ?? 0) > 0, label: "Add a staff member", href: "/staff/new" },
+    { done: (jobsC.count ?? 0) > 0, label: "Book a job", href: "/jobs/new" },
+    { done: Boolean((company.data as { slug: string | null } | null)?.slug), label: "Set your booking link", href: "/settings" },
+  ];
   const today = new Date().toLocaleDateString("en-NG", {
     weekday: "long",
     day: "numeric",
@@ -23,6 +39,8 @@ export default async function DashboardPage() {
         </div>
         <Link href="/jobs/new" className="btn-primary">+ New job</Link>
       </header>
+
+      <GettingStarted steps={setupSteps} />
 
       <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3">
         <StatTile label="Jobs today" value={String(s.jobsToday.length)} />
