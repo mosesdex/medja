@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const ITEMS = [
-  { href: "/dashboard", label: "Home" },
-  { href: "/jobs", label: "Jobs" },
-  { href: "/money", label: "Money" },
-  { href: "/staff", label: "Staff" },
-  { href: "/clients", label: "Clients" },
+  { href: "/dashboard", label: "Home", primary: true },
+  { href: "/jobs", label: "Jobs", primary: true },
+  { href: "/money", label: "Money", primary: true },
+  { href: "/staff", label: "Staff", primary: true },
+  { href: "/clients", label: "Clients", primary: true },
+  { href: "/reports", label: "Reports", primary: false },
+  { href: "/settings", label: "Settings", primary: false },
 ];
 
 export function OwnerNav() {
@@ -27,7 +29,9 @@ export function OwnerNav() {
           <Link
             key={it.href}
             href={it.href}
-            className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-[11px] font-semibold md:flex-none md:flex-row md:justify-start md:gap-3 md:px-3 md:py-3 md:text-sm ${
+            className={`flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-[11px] font-semibold md:flex-none md:flex-row md:justify-start md:gap-3 md:px-3 md:py-3 md:text-sm ${
+              it.primary ? "flex" : "hidden md:flex"
+            } ${
               active
                 ? "text-primary md:bg-primary-soft"
                 : "text-muted hover:text-ink"

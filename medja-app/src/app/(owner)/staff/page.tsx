@@ -14,9 +14,12 @@ export default async function StaffPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <header className="mb-4 flex items-center justify-between">
+      <header className="mb-4 flex items-center justify-between gap-2">
         <h1 className="font-display text-xl font-bold">Staff</h1>
-        <Link href="/staff/new" className="btn-primary">+ Add staff</Link>
+        <div className="flex gap-2">
+          <Link href="/staff/payroll" className="btn-outline text-sm">Payroll</Link>
+          <Link href="/staff/new" className="btn-primary">+ Add staff</Link>
+        </div>
       </header>
 
       {!staff?.length ? (
