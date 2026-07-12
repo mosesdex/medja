@@ -21,6 +21,16 @@ export default async function StaffDetailPage({
     .maybeSingle();
   if (!s) notFound();
 
+  const { data: ratings } = await supabase
+    .from("ratings")
+    .select("stars")
+    .eq("staff_id", id);
+  const ratingCount = ratings?.length ?? 0;
+  const avgStars =
+    ratingCount > 0
+      ? (ratings!.reduce((sum, r) => sum + (r.stars as number), 0) / ratingCount).toFixed(1)
+      : null;
+
   const prog = vettingProgress(s);
   const firstName = String(s.name).split(/\s+/)[0];
   const shareMsg = `Your cleaner today is ${firstName} from our team — vetted with ID and guarantor on record. They will arrive shortly.`;
@@ -33,6 +43,18 @@ export default async function StaffDetailPage({
         <h1 className="flex-1 font-display text-lg font-bold">{s.name}</h1>
         <Badge value={s.vetting_status === "vetted" ? "vetted" : "pending"} />
       </header>
+
+      {avgStars && (
+        <div className="card mb-3 flex items-center justify-between p-4">
+          <span className="text-sm text-muted">Client rating</span>
+          <span className="font-display text-base font-bold text-amber">
+            ★ {avgStars}
+            <span className="ml-1 text-xs font-semibold text-muted">
+              ({ratingCount} review{ratingCount > 1 ? "s" : ""})
+            </span>
+          </span>
+        </div>
+      )}
 
       <div className="card mb-3 p-4">
         <div className="flex items-center justify-between">

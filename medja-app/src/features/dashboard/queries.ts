@@ -5,6 +5,7 @@ export interface DashboardSummary {
   collectedTodayKobo: number;
   outstandingKobo: number;
   overdueCount: number;
+  newBookings: { id: string; client: string; when: string }[];
 }
 
 /** Start/end of today in the server's locale (WAT in production). */
@@ -40,7 +41,30 @@ export async function dashboardSummary(): Promise<DashboardSummary> {
 
   const overdueCount = (invoices ?? []).filter((i) => i.status === "overdue").length;
 
+  // New booking requests: booked jobs created in the last 48h (e.g. from the
+  // public booking link) that haven't been assigned yet.
+  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+  const { data: recent } = await supabase
+    .from("jobs")
+    .select("id, scheduled_at, created_at, clients(name)")
+    .eq("status", "booked")
+    .gte("created_at", twoDaysAgo.toISOString())
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  const newBookings = (recent ?? []).map((j) => ({
+    id: j.id,
+    client: (j.clients as unknown as { name: string } | null)?.name ?? "Client",
+    when: new Date(j.scheduled_at).toLocaleString("en-NG", {
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+  }));
+
   return {
+    newBookings,
     jobsToday: (jobs ?? []).map((j) => ({
       id: j.id,
       when: new Date(j.scheduled_at).toLocaleTimeString("en-NG", {

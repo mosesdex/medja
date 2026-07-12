@@ -34,6 +34,9 @@ export default async function MoneyPage() {
       </header>
 
       <div className="mb-4 flex gap-2">
+        <Link href="/money/quotes" className="btn-outline flex-1 text-sm">
+          Quotes
+        </Link>
         <Link href="/money/contracts" className="btn-outline flex-1 text-sm">
           Contracts
         </Link>

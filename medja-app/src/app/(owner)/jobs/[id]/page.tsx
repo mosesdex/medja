@@ -4,6 +4,8 @@ import { createServerClient } from "@/lib/supabase/server";
 import { Badge, Naira } from "@/components/ui";
 import { Checklist } from "@/features/jobs/Checklist";
 import { AssignControl } from "@/features/dispatch/AssignControl";
+import { StatusControl } from "@/features/jobs/StatusControl";
+import { getJobPhotos } from "@/features/field/photos";
 import { waLink } from "@/lib/whatsapp";
 
 export default async function JobCardPage({
@@ -39,6 +41,10 @@ export default async function JobCardPage({
     .eq("job_id", id);
   const assignedIds = (assigned ?? []).map((a) => a.staff_id as string);
 
+  const photos = await getJobPhotos(id);
+  const beforePhotos = photos.filter((p) => p.kind === "before");
+  const afterPhotos = photos.filter((p) => p.kind === "after");
+
   const client = job.clients as unknown as {
     name: string;
     phone: string | null;
@@ -57,11 +63,19 @@ export default async function JobCardPage({
     minute: "2-digit",
   });
 
+  const isDone = ["done", "invoiced", "paid"].includes(job.status);
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
   const wa =
     client?.phone &&
     waLink(
       client.phone,
-      `Hello ${client.name}, this is an update on your cleaning job scheduled ${when}.`,
+      isDone
+        ? `Hello ${client.name}, your cleaning job (${when}) is complete. Thank you for choosing us!` +
+            (afterPhotos.length
+              ? `\n\nAfter photos:\n${afterPhotos.map((p) => p.url).join("\n")}`
+              : "") +
+            (appUrl ? `\n\nPlease rate us: ${appUrl}/rate/${id}` : "")
+        : `Hello ${client.name}, this is an update on your cleaning job scheduled ${when}.`,
     );
 
   return (
@@ -99,10 +113,42 @@ export default async function JobCardPage({
 
       {items && items.length > 0 && <Checklist jobId={id} items={items} />}
 
+      {photos.length > 0 && (
+        <div className="card mt-3 p-4">
+          <h3 className="mb-2 font-display text-sm font-semibold">Photos</h3>
+          {beforePhotos.length > 0 && (
+            <>
+              <div className="mb-1 text-xs font-semibold text-muted">Before</div>
+              <div className="mb-3 grid grid-cols-3 gap-2">
+                {beforePhotos.map((p, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={i} src={p.url} alt="before" className="aspect-square w-full rounded-lg object-cover" />
+                ))}
+              </div>
+            </>
+          )}
+          {afterPhotos.length > 0 && (
+            <>
+              <div className="mb-1 text-xs font-semibold text-muted">After</div>
+              <div className="grid grid-cols-3 gap-2">
+                {afterPhotos.map((p, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={i} src={p.url} alt="after" className="aspect-square w-full rounded-lg object-cover" />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      <div className="mt-3">
+        <StatusControl jobId={id} status={job.status} />
+      </div>
+
       <div className="mt-3 flex gap-2">
         {wa && (
           <a href={wa} target="_blank" rel="noopener" className="btn-outline flex-1">
-            WhatsApp client
+            {isDone ? "Send completion" : "WhatsApp client"}
           </a>
         )}
         <Link href={`/money/invoices/new?job=${id}`} className="btn-primary flex-1">
