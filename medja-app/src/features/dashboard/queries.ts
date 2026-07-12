@@ -6,6 +6,7 @@ export interface DashboardSummary {
   outstandingKobo: number;
   overdueCount: number;
   newBookings: { id: string; client: string; when: string }[];
+  monthlyRevenue: { label: string; kobo: number }[];
 }
 
 /** Start/end of today in the server's locale (WAT in production). */
@@ -41,6 +42,8 @@ export async function dashboardSummary(): Promise<DashboardSummary> {
 
   const overdueCount = (invoices ?? []).filter((i) => i.status === "overdue").length;
 
+  const now = new Date();
+
   // New booking requests: booked jobs created in the last 48h (e.g. from the
   // public booking link) that haven't been assigned yet.
   const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
@@ -63,6 +66,25 @@ export async function dashboardSummary(): Promise<DashboardSummary> {
     }),
   }));
 
+  // Collected revenue by month for the last 6 months (paid invoices).
+  const months: { label: string; year: number; month: number; kobo: number }[] = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({
+      label: d.toLocaleDateString("en-NG", { month: "short" }),
+      year: d.getFullYear(),
+      month: d.getMonth(),
+      kobo: 0,
+    });
+  }
+  for (const inv of invoices ?? []) {
+    if (inv.status !== "paid") continue;
+    const d = new Date(inv.created_at);
+    const bucket = months.find((m) => m.year === d.getFullYear() && m.month === d.getMonth());
+    if (bucket) bucket.kobo += inv.total_kobo;
+  }
+  const monthlyRevenue = months.map((m) => ({ label: m.label, kobo: m.kobo }));
+
   return {
     newBookings,
     jobsToday: (jobs ?? []).map((j) => ({
@@ -79,5 +101,6 @@ export async function dashboardSummary(): Promise<DashboardSummary> {
     collectedTodayKobo,
     outstandingKobo,
     overdueCount,
+    monthlyRevenue,
   };
 }

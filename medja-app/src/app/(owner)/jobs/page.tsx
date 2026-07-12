@@ -2,13 +2,28 @@ import Link from "next/link";
 import { createServerClient } from "@/lib/supabase/server";
 import { Badge, Naira, EmptyState } from "@/components/ui";
 
-export default async function JobsPage() {
+const FILTERS = [
+  { key: "", label: "All" },
+  { key: "booked", label: "Booked" },
+  { key: "in_progress", label: "In progress" },
+  { key: "done", label: "Done" },
+  { key: "paid", label: "Paid" },
+];
+
+export default async function JobsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status } = await searchParams;
   const supabase = await createServerClient();
-  const { data: jobs } = await supabase
+  let q = supabase
     .from("jobs")
     .select("id, type, status, scheduled_at, value_kobo, clients(name)")
     .order("scheduled_at", { ascending: true })
     .limit(50);
+  if (status) q = q.eq("status", status);
+  const { data: jobs } = await q;
 
   // group by day
   const byDay = new Map<string, typeof jobs>();
@@ -30,6 +45,21 @@ export default async function JobsPage() {
           + New job
         </Link>
       </header>
+
+      <div className="mb-4 flex flex-wrap gap-2">
+        {FILTERS.map((f) => {
+          const active = (status ?? "") === f.key;
+          return (
+            <Link
+              key={f.key}
+              href={f.key ? `/jobs?status=${f.key}` : "/jobs"}
+              className={`badge ${active ? "bg-primary text-white" : "bg-muted-bg text-muted"}`}
+            >
+              {f.label}
+            </Link>
+          );
+        })}
+      </div>
 
       {!jobs?.length ? (
         <EmptyState title="No jobs scheduled" hint="Book your first job to see it here." />

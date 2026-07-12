@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getMember } from "@/lib/auth";
 import { dashboardSummary } from "@/features/dashboard/queries";
+import { RevenueChart } from "@/features/dashboard/RevenueChart";
 import { Badge, Naira, StatTile, EmptyState } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
 
@@ -55,6 +56,10 @@ export default async function DashboardPage() {
           </div>
         </div>
       )}
+
+      <div className="mb-4">
+        <RevenueChart data={s.monthlyRevenue} />
+      </div>
 
       <div className="mb-2 flex items-center justify-between">
         <h2 className="font-display text-base font-semibold">Today&apos;s jobs</h2>
