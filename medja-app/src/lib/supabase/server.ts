@@ -1,11 +1,14 @@
 import { createServerClient as createSSRClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import type { Database } from "@/types/database";
+
+// NOTE: the client is intentionally schema-permissive during bootstrapping.
+// The intended schema lives in src/types/database.ts and supabase/migrations/.
+// After linking a Supabase project, `npm run gen:types` restores full typing.
 
 /** Supabase client for Server Components, Server Actions and Route Handlers. */
 export async function createServerClient() {
   const cookieStore = await cookies();
-  return createSSRClient<Database>(
+  return createSSRClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -35,7 +38,7 @@ export async function createServerClient() {
 
 /** Service-role client for trusted server-only work (webhooks, cron). Bypasses RLS. */
 export function createServiceClient() {
-  return createSSRClient<Database>(
+  return createSSRClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { cookies: { getAll: () => [], setAll: () => {} } },

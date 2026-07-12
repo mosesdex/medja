@@ -78,6 +78,7 @@ export interface Database {
       };
       auth_company_id: { Args: Record<string, never>; Returns: string };
       next_invoice_number: { Args: { p_company: string }; Returns: string };
+      seed_default_templates: { Args: { p_company: string }; Returns: undefined };
     };
   };
 }

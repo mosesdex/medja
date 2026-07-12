@@ -6,6 +6,13 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4173"],
       "port": 4173
+    },
+    {
+      "name": "medja-dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-lc", "cd medja-app && npm run dev"],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }
