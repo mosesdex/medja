@@ -58,3 +58,25 @@ export async function updateJobStatus(jobId: string, status: string) {
   revalidatePath(`/jobs/${jobId}`);
   revalidatePath("/jobs");
 }
+
+/** Reschedule a job and/or update its notes. */
+export async function editJob(formData: FormData) {
+  const supabase = await createServerClient();
+  const jobId = String(formData.get("job_id"));
+  const scheduledAt = String(formData.get("scheduled_at") ?? "");
+  const notes = String(formData.get("notes") ?? "").trim();
+  const patch: { scheduled_at?: string; notes?: string | null } = {};
+  if (scheduledAt) patch.scheduled_at = new Date(scheduledAt).toISOString();
+  patch.notes = notes || null;
+  await supabase.from("jobs").update(patch).eq("id", jobId);
+  revalidatePath(`/jobs/${jobId}`);
+  revalidatePath("/jobs");
+}
+
+/** Cancel (delete) a job. Its checklist/assignments cascade-delete. */
+export async function deleteJob(jobId: string) {
+  const supabase = await createServerClient();
+  await supabase.from("jobs").delete().eq("id", jobId);
+  revalidatePath("/jobs");
+  redirect("/jobs");
+}

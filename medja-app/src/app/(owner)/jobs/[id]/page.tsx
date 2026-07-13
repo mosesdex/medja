@@ -5,6 +5,7 @@ import { Badge, Naira } from "@/components/ui";
 import { Checklist } from "@/features/jobs/Checklist";
 import { AssignControl } from "@/features/dispatch/AssignControl";
 import { StatusControl } from "@/features/jobs/StatusControl";
+import { JobEditControls } from "@/features/jobs/JobEditControls";
 import { getJobPhotos } from "@/features/field/photos";
 import { waLink } from "@/lib/whatsapp";
 
@@ -55,13 +56,16 @@ export default async function JobCardPage({
     access_note: string | null;
   } | null;
 
-  const when = new Date(job.scheduled_at).toLocaleString("en-NG", {
+  const scheduledDate = new Date(job.scheduled_at);
+  const when = scheduledDate.toLocaleString("en-NG", {
     weekday: "short",
     day: "numeric",
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
   });
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const scheduledLocal = `${scheduledDate.getFullYear()}-${pad(scheduledDate.getMonth() + 1)}-${pad(scheduledDate.getDate())}T${pad(scheduledDate.getHours())}:${pad(scheduledDate.getMinutes())}`;
 
   const isDone = ["done", "invoiced", "paid"].includes(job.status);
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
@@ -143,6 +147,10 @@ export default async function JobCardPage({
 
       <div className="mt-3">
         <StatusControl jobId={id} status={job.status} />
+      </div>
+
+      <div className="mt-3">
+        <JobEditControls jobId={id} scheduledLocal={scheduledLocal} notes={job.notes ?? ""} />
       </div>
 
       <div className="mt-3 flex gap-2">
