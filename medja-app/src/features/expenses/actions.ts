@@ -17,3 +17,10 @@ export async function addExpense(formData: FormData) {
   });
   revalidatePath("/money/expenses");
 }
+
+export async function deleteExpense(id: string) {
+  const supabase = await createServerClient();
+  // RLS restricts deletion to the caller's own company.
+  await supabase.from("expenses").delete().eq("id", id);
+  revalidatePath("/money/expenses");
+}

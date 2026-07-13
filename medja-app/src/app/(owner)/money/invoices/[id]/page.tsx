@@ -48,6 +48,9 @@ export default async function InvoiceDetailPage({
       <header className="mb-4 flex items-center gap-3">
         <Link href="/money" className="btn-outline px-3 py-2">←</Link>
         <h1 className="flex-1 font-display text-lg font-bold">{inv.number}</h1>
+        <Link href={`/money/invoices/${inv.id}/print`} className="btn-outline px-3 py-2 text-sm">
+          Print
+        </Link>
         <Badge value={inv.status} />
       </header>
 

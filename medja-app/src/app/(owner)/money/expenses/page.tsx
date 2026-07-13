@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createServerClient } from "@/lib/supabase/server";
 import { addExpense } from "@/features/expenses/actions";
+import { DeleteExpense } from "@/features/expenses/DeleteExpense";
 import { Naira } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
 
@@ -40,12 +41,13 @@ export default async function ExpensesPage() {
 
       <div className="flex flex-col gap-2">
         {expenses?.map((e) => (
-          <div key={e.id} className="card flex items-center justify-between p-3">
-            <div>
+          <div key={e.id} className="card flex items-center justify-between gap-3 p-3">
+            <div className="min-w-0 flex-1">
               <div className="font-bold capitalize">{e.category}</div>
-              <div className="text-sm text-muted">{e.note ?? new Date(e.spent_on).toLocaleDateString("en-NG")}</div>
+              <div className="truncate text-sm text-muted">{e.note ?? new Date(e.spent_on).toLocaleDateString("en-NG")}</div>
             </div>
             <Naira kobo={e.amount_kobo} />
+            <DeleteExpense id={e.id as string} />
           </div>
         ))}
       </div>
