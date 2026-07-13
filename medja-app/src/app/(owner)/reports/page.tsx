@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { createServerClient } from "@/lib/supabase/server";
 import { StatTile } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
+import { classifyChurn } from "@/features/clients/churn";
 
 const TYPE_LABEL: Record<string, string> = {
   residential: "Residential",
@@ -19,6 +21,25 @@ export default async function ReportsPage() {
   const { data: jobs } = await supabase.from("jobs").select("type, value_kobo");
   const { data: expenses } = await supabase.from("expenses").select("amount_kobo, category");
   const { data: ratings } = await supabase.from("ratings").select("stars");
+
+  // Client churn: most recent job per client.
+  const { data: clientRows } = await supabase
+    .from("clients")
+    .select("id, name, jobs(scheduled_at)");
+  const churn = classifyChurn(
+    (clientRows ?? []).map((c) => {
+      const cjobs = (c.jobs as unknown as { scheduled_at: string }[]) ?? [];
+      const last = cjobs
+        .map((j) => j.scheduled_at)
+        .sort()
+        .at(-1) ?? null;
+      return { clientId: c.id as string, name: c.name as string, lastJobAt: last };
+    }),
+    new Date(),
+  );
+  const lapsing = churn
+    .filter((c) => c.status !== "active")
+    .sort((a, b) => (b.daysSince ?? 9999) - (a.daysSince ?? 9999));
 
   const revenue = (paidInvoices ?? []).reduce((s, i) => s + i.total_kobo, 0);
   const expenseTotal = (expenses ?? []).reduce((s, e) => s + e.amount_kobo, 0);
@@ -89,6 +110,27 @@ export default async function ReportsPage() {
             </div>
           ))}
           {topClients.length === 0 && <p className="text-sm text-muted">No paid invoices yet.</p>}
+        </div>
+      </div>
+
+      <div className="card mt-4 p-4">
+        <h2 className="mb-3 font-display text-sm font-semibold">Clients to win back</h2>
+        <div className="divide-y divide-line">
+          {lapsing.map((c) => (
+            <Link
+              key={c.clientId}
+              href={`/clients/${c.clientId}`}
+              className="flex items-center justify-between py-2 text-sm hover:opacity-80"
+            >
+              <span>{c.name}</span>
+              <span className={`badge ${c.status === "churned" ? "bg-red-50 text-danger" : "bg-amber-soft text-amber"}`}>
+                {c.daysSince === null ? "no jobs yet" : `${c.daysSince}d since last`}
+              </span>
+            </Link>
+          ))}
+          {lapsing.length === 0 && (
+            <p className="text-sm text-muted">Every client has been served recently 🎉</p>
+          )}
         </div>
       </div>
 
