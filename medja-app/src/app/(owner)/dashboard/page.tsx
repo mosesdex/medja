@@ -3,6 +3,7 @@ import { getMember } from "@/lib/auth";
 import { dashboardSummary } from "@/features/dashboard/queries";
 import { RevenueChart } from "@/features/dashboard/RevenueChart";
 import { GettingStarted } from "@/features/dashboard/GettingStarted";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import { Badge, Naira, StatTile, EmptyState } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
 import { createServerClient } from "@/lib/supabase/server";
@@ -40,6 +41,7 @@ export default async function DashboardPage() {
         <Link href="/jobs/new" className="btn-primary">+ New job</Link>
       </header>
 
+      <InstallPrompt />
       <GettingStarted steps={setupSteps} />
 
       <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3">

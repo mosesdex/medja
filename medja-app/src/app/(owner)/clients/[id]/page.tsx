@@ -5,6 +5,7 @@ import { addSite } from "@/features/clients/actions";
 import { Badge, Naira, StatTile } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
 import { waLink } from "@/lib/whatsapp";
+import { rollupBySite } from "@/features/clients/rollup";
 
 export default async function ClientDetailPage({
   params,
@@ -32,6 +33,21 @@ export default async function ClientDetailPage({
     .eq("client_id", id)
     .order("scheduled_at", { ascending: false })
     .limit(10);
+
+  // All jobs (site + value + status) for the per-site rollup.
+  const { data: allJobs } = await supabase
+    .from("jobs")
+    .select("site_id, value_kobo, status")
+    .eq("client_id", id);
+  const siteRollup = new Map(
+    rollupBySite(
+      (allJobs ?? []).map((j) => ({
+        siteId: j.site_id as string | null,
+        valueKobo: j.value_kobo as number | null,
+        status: j.status as string,
+      })),
+    ).map((r) => [r.siteId, r]),
+  );
 
   const { data: invoices } = await supabase
     .from("invoices")
@@ -76,19 +92,41 @@ export default async function ClientDetailPage({
       )}
 
       <section className="mb-4">
-        <h2 className="mb-2 font-display text-base font-semibold">Sites</h2>
+        <div className="mb-2 flex items-baseline justify-between">
+          <h2 className="font-display text-base font-semibold">
+            Sites{(sites?.length ?? 0) > 1 ? ` (${sites!.length})` : ""}
+          </h2>
+          {(sites?.length ?? 0) > 1 && (
+            <span className="text-xs text-muted">per-site activity</span>
+          )}
+        </div>
         <div className="flex flex-col gap-2">
-          {sites?.map((s) => (
-            <div key={s.id} className="card p-3">
-              <div className="font-bold">{s.label}</div>
-              <div className="text-sm text-muted">{s.address ?? "—"}</div>
-              {s.access_note && (
-                <div className="mt-1 text-sm">
-                  <span className="text-muted">Access:</span> {s.access_note}
+          {sites?.map((s) => {
+            const r = siteRollup.get(s.id);
+            return (
+              <div key={s.id} className="card p-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div className="font-bold">{s.label}</div>
+                    <div className="text-sm text-muted">{s.address ?? "—"}</div>
+                  </div>
+                  {r && (
+                    <div className="text-right">
+                      <div className="font-semibold money">{formatNaira(r.valueKobo)}</div>
+                      <div className="text-xs text-muted">
+                        {r.jobs} job{r.jobs === 1 ? "" : "s"} · {r.completed} done
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
+                {s.access_note && (
+                  <div className="mt-1 text-sm">
+                    <span className="text-muted">Access:</span> {s.access_note}
+                  </div>
+                )}
+              </div>
+            );
+          })}
           <details className="card p-3">
             <summary className="cursor-pointer text-sm font-semibold text-primary">
               + Add a site
