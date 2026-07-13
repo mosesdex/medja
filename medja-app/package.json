@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "gen:types": "supabase gen types typescript --local > src/types/database.ts"
+    "gen:types": "supabase gen types typescript --local > src/types/database.ts",
+    "dev:local": "bash scripts/dev-local.sh"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",

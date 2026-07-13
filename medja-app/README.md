@@ -17,10 +17,30 @@ Built across four phases — see [`docs/superpowers/plans/2026-07-12-medja-imple
 
 ## Local setup
 
+### Option A — fully local database (recommended for development)
+
+Runs a complete local Supabase stack (Postgres + Auth + Storage) on your machine.
+**Requires Docker** (Docker Desktop or `colima start`).
+
 ```bash
 cd medja-app
 npm install
-cp .env.local.example .env.local   # fill in the values below
+npm run dev:local     # starts local Supabase, applies all migrations, wires .env.local, runs the app
+```
+
+Then open http://localhost:3000. Sign-in magic-link emails are caught locally by
+**Inbucket at http://localhost:54324** (no real email needed). The local database
+Studio is at http://localhost:54323. All 16 migrations — including the rating RPC —
+apply automatically, so every feature works locally.
+
+To stop the local stack: `supabase stop`.
+
+### Option B — point at a hosted Supabase project
+
+```bash
+cd medja-app
+npm install
+cp .env.local.example .env.local   # fill in your project's URL + keys
 npm run dev
 ```
 
