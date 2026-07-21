@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Medja · Product Overview</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap');
+:root{
+  --primary:#2563EB; --primary-dark:#1D4ED8; --accent:#059669; --accent-soft:#ECFDF5;
+  --ink:#0F172A; --muted:#64748B; --line:#E2E8F0; --bg:#F8FAFC; --soft:#EFF6FF;
+  --amber:#D97706; --amber-soft:#FFFBEB;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+@page{ size:A4; margin:0; }
+html{font-family:'Open Sans',system-ui,sans-serif;color:var(--ink);font-size:11px;line-height:1.55;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+h1,h2,h3,h4{font-family:'Poppins',sans-serif;line-height:1.2}
+.page{ width:210mm; min-height:297mm; padding:18mm 16mm; position:relative; page-break-after:always; }
+.page:last-child{ page-break-after:auto; }
+
+/* Cover */
+.cover{ background:linear-gradient(150deg,#1D4ED8,#2563EB 55%,#059669); color:#fff; display:flex; flex-direction:column; }
+.cover .logo{ width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-family:'Poppins';font-weight:800;font-size:34px;border:1.5px solid rgba(255,255,255,.35) }
+.cover h1{ font-size:52px;font-weight:800;letter-spacing:-.02em;margin-top:auto }
+.cover .sub{ font-size:17px;opacity:.92;margin-top:14px;max-width:150mm }
+.cover .tagrow{ display:flex;gap:10px;margin-top:26px;flex-wrap:wrap }
+.cover .tag{ background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:7px 15px;font-size:12px;font-weight:600 }
+.cover .foot{ margin-top:auto;padding-top:26px;border-top:1px solid rgba(255,255,255,.25);font-size:12px;opacity:.85;display:flex;justify-content:space-between }
+.cover .kicker{ font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.85 }
+
+/* Section headings */
+.eyebrow{ display:inline-block;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--primary);background:var(--soft);border-radius:999px;padding:5px 11px }
+h2.sec{ font-size:26px;font-weight:800;margin:12px 0 6px;letter-spacing:-.01em }
+.lead{ color:var(--muted);font-size:12.5px;max-width:150mm }
+.hr{ height:1px;background:var(--line);margin:16px 0 }
+
+/* Problem cards */
+.grid2{ display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px }
+.grid3{ display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px }
+.card{ border:1px solid var(--line);border-radius:14px;padding:15px;background:#fff }
+.card h3{ font-size:13.5px;margin-bottom:5px }
+.card p{ font-size:11px;color:var(--muted) }
+.chip{ display:inline-flex;width:34px;height:34px;border-radius:10px;align-items:center;justify-content:center;font-size:17px;margin-bottom:9px }
+.ic-blue{ background:var(--soft) } .ic-green{ background:var(--accent-soft) } .ic-amber{ background:var(--amber-soft) }
+
+/* Feature groups */
+.feat{ border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:11px;break-inside:avoid }
+.feat .head{ display:flex;align-items:center;gap:10px;margin-bottom:9px }
+.feat .badge{ width:30px;height:30px;border-radius:9px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Poppins';font-weight:700;font-size:13px }
+.feat .head h3{ font-size:14px }
+.feat ul{ list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:4px 18px }
+.feat li{ font-size:10.5px;padding-left:15px;position:relative;color:#334155 }
+.feat li::before{ content:'';position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:99px;background:var(--accent) }
+
+/* Why-win */
+.win{ display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line) }
+.win:last-child{ border-bottom:none }
+.win .mk{ min-width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px }
+.win h3{ font-size:13.5px;margin-bottom:3px }
+.win p{ font-size:11px;color:var(--muted) }
+
+/* Pricing */
+.price{ display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px }
+.tier{ border:1.5px solid var(--line);border-radius:16px;padding:18px 15px }
+.tier.hot{ border-color:var(--primary);box-shadow:0 6px 18px rgba(37,99,235,.12) }
+.tier .name{ font-family:'Poppins';font-weight:700;font-size:14px }
+.tier .amt{ font-family:'Poppins';font-weight:800;font-size:26px;margin:4px 0 2px }
+.tier .amt span{ font-size:11px;color:var(--muted);font-weight:600 }
+.tier ul{ list-style:none;margin-top:10px }
+.tier li{ font-size:10.5px;color:#334155;padding:3px 0 3px 15px;position:relative }
+.tier li::before{ content:'✓';position:absolute;left:0;color:var(--accent);font-weight:800 }
+
+/* stat band */
+.stats{ display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px }
+.stat{ background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center }
+.stat b{ display:block;font-family:'Poppins';font-weight:800;font-size:22px;color:var(--primary) }
+.stat span{ font-size:10px;color:var(--muted);font-weight:600 }
+
+.footer{ position:absolute;left:16mm;right:16mm;bottom:12mm;display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:8px }
+.note{ font-size:10px;color:var(--muted);margin-top:8px }
+.callout{ background:var(--accent-soft);border:1px solid #A7F3D0;border-radius:14px;padding:15px;margin-top:16px }
+.callout h3{ font-size:13px;color:#065F46;margin-bottom:4px }
+.callout p{ font-size:11px;color:#047857 }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 · COVER -->
+<section class="page cover">
+  <div class="logo">M</div>
+  <div style="margin-top:22px" class="kicker">Product Overview · 2026</div>
+  <h1>Run your cleaning company from your phone.</h1>
+  <div class="sub">Medja is the all-in-one operations app for Nigerian cleaning businesses: residential, office and post-construction. Scheduling, staff, quotes, naira invoicing and Paystack payments, all in one place.</div>
+  <div class="tagrow">
+    <div class="tag">Android-first PWA</div>
+    <div class="tag">Naira payments (Paystack)</div>
+    <div class="tag">WhatsApp-native</div>
+    <div class="tag">Built for Nigeria</div>
+  </div>
+  <div class="foot">
+    <span>Medja · cleaning company management</span>
+    <span>github.com/mosesdex/medja</span>
+  </div>
+</section>
+
+<!-- PAGE 2 · WHAT / PROBLEM -->
+<section class="page">
+  <span class="eyebrow">What is Medja</span>
+  <h2 class="sec">One app to run the whole business</h2>
+  <p class="lead">Nigerian cleaning companies juggle phone calls, WhatsApp groups and paper job cards to run jobs, and lose money to untracked cash, missed invoices and no-shows. Medja replaces all of it with a single, mobile-first system the owner and every cleaner can use, and it collects money the Nigerian way.</p>
+
+  <div class="stats">
+    <div class="stat"><b>~83%</b><span>of Nigerian phones run Android</span></div>
+    <div class="stat"><b>3</b><span>job types: home, office, post-build</span></div>
+    <div class="stat"><b>₦</b><span>naira pricing &amp; invoicing</span></div>
+    <div class="stat"><b>1 tap</b><span>WhatsApp to clients</span></div>
+  </div>
+
+  <div class="hr"></div>
+  <span class="eyebrow">The problem it solves</span>
+  <h2 class="sec" style="font-size:20px">Where cleaning businesses leak money</h2>
+  <div class="grid3">
+    <div class="card"><div class="chip ic-amber">🗂️</div><h3>Paper job cards get lost</h3><p>No record of what was cleaned, by whom, or what the client agreed to pay. Disputes end in write-offs.</p></div>
+    <div class="card"><div class="chip ic-amber">💬</div><h3>WhatsApp isn't a schedule</h3><p>Owners burn hours chasing teams by call; nobody knows who is at which site.</p></div>
+    <div class="card"><div class="chip ic-amber">💸</div><h3>Cash goes untracked</h3><p>Field cash, unmatched transfers, forgotten invoices, and global tools can't even collect naira.</p></div>
+  </div>
+
+  <div class="callout">
+    <h3>The insight</h3>
+    <p>Global apps like Jobber, ZenMaid and Housecall Pro have <b>zero Nigerian payment support</b>: no Paystack, no bank transfer, no USSD. Medja is built naira-first, WhatsApp-native and Android-first for exactly this market.</p>
+  </div>
+
+  <div class="footer"><span>Medja · Product Overview</span><span>2</span></div>
+</section>
+
+<!-- PAGE 3 · FEATURES -->
+<section class="page">
+  <span class="eyebrow">Features</span>
+  <h2 class="sec">Everything a cleaning company needs</h2>
+  <p class="lead">Organised around how the business actually runs, from booking a job to getting paid.</p>
+
+  <div style="margin-top:16px">
+    <div class="feat">
+      <div class="head"><div class="badge">1</div><h3>Scheduling &amp; jobs</h3></div>
+      <ul>
+        <li>Job calendar (day / week)</li>
+        <li>Digital job cards</li>
+        <li>Residential / commercial / post-construction</li>
+        <li>Per-type cleaning checklists</li>
+        <li>Reschedule, edit &amp; cancel</li>
+        <li>Recurring contracts auto-book jobs</li>
+      </ul>
+    </div>
+
+    <div class="feat">
+      <div class="head"><div class="badge">2</div><h3>Field app for cleaners</h3></div>
+      <ul>
+        <li>"My Jobs" on any Android phone</li>
+        <li>GPS check-in / check-out</li>
+        <li>Before &amp; after photos</li>
+        <li>On-site checklist ticking</li>
+        <li>Dispatch &amp; team assignment</li>
+        <li>Works on low-end phones, low data</li>
+      </ul>
+    </div>
+
+    <div class="feat">
+      <div class="head"><div class="badge">3</div><h3>Staff &amp; trust</h3></div>
+      <ul>
+        <li>Vetting: NIN / ID + guarantor records</li>
+        <li>Background-check status</li>
+        <li>"Verified cleaner" card to clients</li>
+        <li>Attendance from GPS check-ins</li>
+        <li>Payroll runs (per-job / day / month)</li>
+        <li>Client ratings per staff</li>
+      </ul>
+    </div>
+
+    <div class="feat">
+      <div class="head"><div class="badge">4</div><h3>Money &amp; payments</h3></div>
+      <ul>
+        <li>Naira quotes by room count</li>
+        <li>Invoices with VAT &amp; deposits</li>
+        <li>Paystack links: card · transfer · USSD</li>
+        <li>Cash logging &amp; reconciliation</li>
+        <li>Receivables &amp; invoice aging</li>
+        <li>Print / save invoice as PDF</li>
+      </ul>
+    </div>
+
+    <div class="feat">
+      <div class="head"><div class="badge">5</div><h3>Grow &amp; understand</h3></div>
+      <ul>
+        <li>Owner dashboard &amp; revenue chart</li>
+        <li>Reports: revenue, top clients, churn</li>
+        <li>Public booking link (WhatsApp / IG)</li>
+        <li>Multi-site rollups for corporates</li>
+        <li>Expenses &amp; profit view</li>
+        <li>WhatsApp reminders &amp; notifications</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer"><span>Medja · Product Overview</span><span>3</span></div>
+</section>
+
+<!-- PAGE 4 · WHY WIN + PRICING -->
+<section class="page">
+  <span class="eyebrow">Why Medja wins</span>
+  <h2 class="sec">Built for Nigeria, not adapted to it</h2>
+
+  <div style="margin-top:12px">
+    <div class="win"><div class="mk">₦</div><div><h3>It collects money here</h3><p>Paystack card, bank transfer and USSD, cash logging and naira invoicing. This is the single gap no global competitor fills.</p></div></div>
+    <div class="win"><div class="mk">◎</div><div><h3>Android-first &amp; light</h3><p>Installs to the home screen, sips data and runs on cheap phones, for the owner and every cleaner in the field.</p></div></div>
+    <div class="win"><div class="mk">✓</div><div><h3>WhatsApp-native</h3><p>Quotes, invoices, reminders and verified-cleaner profiles all send in one tap, where Nigerian clients already are.</p></div></div>
+    <div class="win"><div class="mk">★</div><div><h3>Solves the trust problem</h3><p>Staff vetting with ID and guarantor records, plus a &ldquo;verified cleaner&rdquo; card sent before every visit.</p></div></div>
+  </div>
+
+  <div class="hr"></div>
+  <span class="eyebrow">Pricing</span>
+  <h2 class="sec" style="font-size:20px">Simple naira plans, billed via Paystack</h2>
+  <div class="price">
+    <div class="tier">
+      <div class="name">Starter</div>
+      <div class="amt">₦15,000<span>/mo</span></div>
+      <ul><li>1 owner + up to 5 staff</li><li>Jobs, quotes &amp; invoices</li><li>Paystack payment links</li><li>WhatsApp sharing</li><li>Staff vetting</li></ul>
+    </div>
+    <div class="tier hot">
+      <div class="name">Growth · popular</div>
+      <div class="amt">₦35,000<span>/mo</span></div>
+      <ul><li>Up to 20 staff</li><li>Recurring contracts</li><li>GPS + photo proof</li><li>Payroll &amp; reconciliation</li><li>Everything in Starter</li></ul>
+    </div>
+    <div class="tier">
+      <div class="name">Pro</div>
+      <div class="amt">₦75,000<span>/mo</span></div>
+      <ul><li>Unlimited staff</li><li>Multi-site rollups</li><li>Reports &amp; analytics</li><li>WhatsApp Business API</li><li>Priority support</li></ul>
+    </div>
+  </div>
+  <p class="note">14-day free trial on every plan · cancel anytime · prices reviewed with pilot feedback.</p>
+
+  <div class="callout" style="margin-top:18px">
+    <h3>Status</h3>
+    <p>Research ✓ · design ✓ · clickable prototypes ✓ · full app built (Next.js + Supabase + Paystack) with 40+ features and 43 automated tests. In pilot preparation.</p>
+  </div>
+
+  <div class="footer"><span>Medja · Run your cleaning company from your phone</span><span>4</span></div>
+</section>
+
+</body>
+</html>
