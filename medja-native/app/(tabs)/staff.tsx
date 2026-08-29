@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "@/lib/supabase";
 import { c } from "@/lib/theme";
@@ -20,21 +20,26 @@ export default function StaffTab() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={["top"]}>
-      <View style={st.head}><H1>Staff</H1></View>
+      <View style={[st.head, { flexDirection: "row", justifyContent: "space-between", alignItems: "center" }]}>
+        <H1>Staff</H1>
+        <Link href="/staff/new" style={{ color: c.primary, fontWeight: "700", fontSize: 15 }}>+ New</Link>
+      </View>
       <FlatList
         data={staff}
         keyExtractor={(s) => s.id}
         contentContainerStyle={{ padding: 16, paddingTop: 0 }}
         ListEmptyComponent={<Card><Muted>No staff yet.</Muted></Card>}
         renderItem={({ item }) => (
-          <Card style={{ marginBottom: 8, flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <View style={st.avatar}><Text style={st.avatarText}>{initials(item.name)}</Text></View>
-            <View style={{ flex: 1 }}>
-              <Text style={st.name}>{item.name}</Text>
-              <Muted>{item.role_title ?? "Cleaner"}</Muted>
-            </View>
-            <Badge value={item.vetting_status === "vetted" ? "vetted" : "pending"} />
-          </Card>
+          <Link href={`/staff/${item.id}`} asChild>
+            <Card style={{ marginBottom: 8, flexDirection: "row", alignItems: "center", gap: 10 }}>
+              <View style={st.avatar}><Text style={st.avatarText}>{initials(item.name)}</Text></View>
+              <View style={{ flex: 1 }}>
+                <Text style={st.name}>{item.name}</Text>
+                <Muted>{item.role_title ?? "Cleaner"}</Muted>
+              </View>
+              <Badge value={item.vetting_status === "vetted" ? "vetted" : "pending"} />
+            </Card>
+          </Link>
         )}
       />
     </SafeAreaView>

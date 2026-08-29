@@ -35,9 +35,12 @@ export default function MoneyTab() {
         keyExtractor={(i) => i.id}
         contentContainerStyle={{ padding: 16, paddingTop: 0 }}
         ListHeaderComponent={
-          <View style={st.tiles}>
-            <StatTile label="Collected" value={formatNaira(collected)} tone="green" />
-            <StatTile label="Outstanding" value={formatNaira(outstanding)} tone="amber" />
+          <View>
+            <View style={st.tiles}>
+              <StatTile label="Collected" value={formatNaira(collected)} tone="green" />
+              <StatTile label="Outstanding" value={formatNaira(outstanding)} tone="amber" />
+            </View>
+            <Link href="/receivables" style={{ color: c.primary, fontWeight: "700", marginBottom: 12 }}>Receivables & aging →</Link>
           </View>
         }
         ListEmptyComponent={<Card><Muted>No invoices yet.</Muted></Card>}
