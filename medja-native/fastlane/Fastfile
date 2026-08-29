@@ -1,19 +1,28 @@
 default_platform(:ios)
 platform :ios do
-  lane :ensure_app do
-    key = app_store_connect_api_key(
+  lane :appid do
+    app_store_connect_api_key(
       key_id: "9Y2UBUGY6G",
       issuer_id: "d14aa02a-ccb1-4a81-bef9-a4b3a62987f0",
       key_filepath: "./secrets/asc-api-key.p8",
       in_house: false,
     )
-    produce(
-      app_identifier: "com.medja.app",
-      app_name: "Medja",
-      language: "English (U.S.)",
-      sku: "medja-com-app",
-      platforms: ["ios"],
-      skip_devcenter: true,
-    )
+    app = Spaceship::ConnectAPI::App.find("com.medja.app")
+    if app.nil?
+      bids = Spaceship::ConnectAPI::BundleId.all(filter: { identifier: "com.medja.app" })
+      UI.important("BIDS=#{bids.map { |b| "#{b.identifier}:#{b.id}" }.join(',')}")
+      bid = bids.find { |b| b.identifier == "com.medja.app" }
+      UI.user_error!("bundle id not found") if bid.nil?
+      app = Spaceship::ConnectAPI::App.create(
+        name: "Medja",
+        version_string: "1.0",
+        sku: "medja-com-app",
+        primary_locale: "en-US",
+        bundle_id: bid.id,
+        platforms: ["IOS"],
+      )
+      UI.success("CREATED")
+    end
+    UI.important("APPID=#{app.id}")
   end
 end
