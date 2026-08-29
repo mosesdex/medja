@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Medja",
+    "slug": "medja",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "medja",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#2563EB"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.medja.app"
+    },
+    "android": {
+      "package": "com.medja.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#2563EB",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        { "locationWhenInUsePermission": "Medja records your GPS check-in when you arrive at a cleaning job." }
+      ],
+      [
+        "expo-image-picker",
+        { "photosPermission": "Medja uses your photos to attach before/after job pictures and staff documents." }
+      ]
+    ]
+  }
+}
