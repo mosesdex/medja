@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
+import { getMember } from "@/lib/auth";
 import { Badge } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
 import { waLink } from "@/lib/whatsapp";
 import { vettingProgress, VETTING_CHECKLIST } from "@/features/staff/vetting";
 import { VettingControl } from "@/features/staff/VettingControl";
+import { DocUpload } from "@/features/staff/DocUpload";
 
 export default async function StaffDetailPage({
   params,
@@ -13,6 +15,7 @@ export default async function StaffDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const member = await getMember();
   const supabase = await createServerClient();
   const { data: s } = await supabase
     .from("staff_profiles")
@@ -94,6 +97,16 @@ export default async function StaffDetailPage({
             </dd>
           </div>
         </dl>
+      </div>
+
+      <div className="card mb-3 p-4">
+        <h2 className="mb-1 font-display text-sm font-semibold">Documents</h2>
+        <p className="mb-1 text-xs text-muted">Stored privately. Only your company can view.</p>
+        <div className="divide-y divide-line">
+          <DocUpload staffId={s.id} companyId={member!.companyId} field="photo_path" label="Staff photo" done={Boolean(s.photo_path)} />
+          <DocUpload staffId={s.id} companyId={member!.companyId} field="nin_doc_path" label="NIN / ID document" done={Boolean(s.nin_doc_path)} />
+          <DocUpload staffId={s.id} companyId={member!.companyId} field="guarantor_id_path" label="Guarantor ID" done={Boolean(s.guarantor_id_path)} />
+        </div>
       </div>
 
       <div className="card mb-3 p-4">
