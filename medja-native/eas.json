@@ -18,8 +18,8 @@
     "production": {
       "ios": {
         "ascApiKeyPath": "./secrets/asc-api-key.p8",
-        "ascApiKeyId": "YOUR_KEY_ID",
-        "ascApiKeyIssuerId": "YOUR_ISSUER_ID"
+        "ascApiKeyId": "9Y2UBUGY6G",
+        "ascApiKeyIssuerId": "d14aa02a-ccb1-4a81-bef9-a4b3a62987f0"
       },
       "android": {
         "serviceAccountKeyPath": "./secrets/play-service-account.json",

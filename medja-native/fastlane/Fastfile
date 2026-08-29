@@ -1,0 +1,19 @@
+default_platform(:ios)
+platform :ios do
+  lane :ensure_app do
+    key = app_store_connect_api_key(
+      key_id: "9Y2UBUGY6G",
+      issuer_id: "d14aa02a-ccb1-4a81-bef9-a4b3a62987f0",
+      key_filepath: "./secrets/asc-api-key.p8",
+      in_house: false,
+    )
+    produce(
+      app_identifier: "com.medja.app",
+      app_name: "Medja",
+      language: "English (U.S.)",
+      sku: "medja-com-app",
+      platforms: ["ios"],
+      skip_devcenter: true,
+    )
+  end
+end
