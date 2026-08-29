@@ -5,6 +5,16 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { getMember } from "@/lib/auth";
 
+export async function updateClientNotes(formData: FormData) {
+  const supabase = await createServerClient();
+  const clientId = String(formData.get("client_id"));
+  await supabase
+    .from("clients")
+    .update({ notes: String(formData.get("notes") ?? "").trim() || null })
+    .eq("id", clientId);
+  revalidatePath(`/clients/${clientId}`);
+}
+
 export async function createClient(formData: FormData) {
   const member = await getMember();
   if (!member) throw new Error("No company");

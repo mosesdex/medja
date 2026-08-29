@@ -42,6 +42,9 @@ export default async function QuoteDetailPage({
       <header className="mb-4 flex items-center gap-3">
         <Link href="/money/quotes" className="btn-outline px-3 py-2">←</Link>
         <h1 className="flex-1 font-display text-lg font-bold">Quote</h1>
+        <Link href={`/money/quotes/${quote.id}/print`} className="btn-outline px-3 py-2 text-sm">
+          Print
+        </Link>
         <Badge value={quote.status} />
       </header>
 

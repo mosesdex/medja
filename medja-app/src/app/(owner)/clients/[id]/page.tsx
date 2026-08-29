@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
-import { addSite } from "@/features/clients/actions";
+import { addSite, updateClientNotes } from "@/features/clients/actions";
 import { Badge, Naira, StatTile } from "@/components/ui";
 import { formatNaira } from "@/lib/money";
 import { waLink } from "@/lib/whatsapp";
@@ -17,7 +17,7 @@ export default async function ClientDetailPage({
 
   const { data: client } = await supabase
     .from("clients")
-    .select("id, name, phone, kind")
+    .select("id, name, phone, kind, notes")
     .eq("id", id)
     .maybeSingle();
   if (!client) notFound();
@@ -90,6 +90,21 @@ export default async function ClientDetailPage({
           Message on WhatsApp
         </a>
       )}
+
+      <details className="card mb-4 p-4" {...((client as { notes: string | null }).notes ? { open: true } : {})}>
+        <summary className="cursor-pointer text-sm font-semibold">Notes</summary>
+        <form action={updateClientNotes} className="mt-3 flex flex-col gap-2">
+          <input type="hidden" name="client_id" value={client.id} />
+          <textarea
+            name="notes"
+            rows={3}
+            defaultValue={(client as { notes: string | null }).notes ?? ""}
+            placeholder="Preferences, access quirks, history…"
+            className="w-full rounded-xl border border-line px-4 py-3 text-base outline-none focus:border-primary"
+          />
+          <button className="btn-primary w-full">Save notes</button>
+        </form>
+      </details>
 
       <section className="mb-4">
         <div className="mb-2 flex items-baseline justify-between">
