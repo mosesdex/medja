@@ -2,7 +2,10 @@ import { useCallback, useState } from "react";
 import { View, Text, ScrollView, Pressable, Linking, StyleSheet } from "react-native";
 import { useLocalSearchParams, useFocusEffect, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Location from "expo-location";
+import * as ImagePicker from "expo-image-picker";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth";
 import { c } from "@/lib/theme";
 import { Card, Badge, Money, Btn, Muted } from "@/components/ui";
 import { waLink } from "@/lib/whatsapp";
@@ -16,8 +19,48 @@ interface Item { id: string; label: string; done: boolean }
 
 export default function JobDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { member } = useAuth();
   const [job, setJob] = useState<Job | null>(null);
   const [items, setItems] = useState<Item[]>([]);
+  const [checkedIn, setCheckedIn] = useState(false);
+  const [busy, setBusy] = useState<null | "checkin" | "photo">(null);
+
+  async function checkIn() {
+    setBusy("checkin");
+    let lat: number | null = null, lng: number | null = null, located = false;
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === "granted") {
+        const pos = await Location.getCurrentPositionAsync({});
+        lat = pos.coords.latitude; lng = pos.coords.longitude; located = true;
+      }
+    } catch { /* location optional */ }
+    await supabase.from("job_events").insert({
+      company_id: member!.companyId, job_id: id, type: "check_in", lat, lng, located,
+    });
+    await supabase.from("jobs").update({ status: "in_progress" }).eq("id", id);
+    setCheckedIn(true);
+    setBusy(null);
+    load();
+  }
+
+  async function addPhoto(kind: "before" | "after") {
+    setBusy("photo");
+    try {
+      const perm = await ImagePicker.requestCameraPermissionsAsync();
+      if (!perm.granted) { setBusy(null); return; }
+      const res = await ImagePicker.launchCameraAsync({ quality: 0.5, allowsEditing: false });
+      if (res.canceled || !res.assets[0]) { setBusy(null); return; }
+      const asset = res.assets[0];
+      const blob = await (await fetch(asset.uri)).blob();
+      const path = `${member!.companyId}/${id}/${kind}-${Date.now()}.jpg`;
+      const { error } = await supabase.storage.from("job-photos").upload(path, blob, { contentType: "image/jpeg" });
+      if (!error) {
+        await supabase.from("job_photos").insert({ company_id: member!.companyId, job_id: id, kind, path });
+      }
+    } catch { /* best effort */ }
+    setBusy(null);
+  }
 
   const load = useCallback(async () => {
     const { data: j } = await supabase
@@ -75,6 +118,23 @@ export default function JobDetail() {
             ))}
           </Card>
         )}
+
+        {!checkedIn && job.status === "booked" ? (
+          <View style={{ marginBottom: 8 }}>
+            <Btn title="Check in at site" kind="green" onPress={checkIn} loading={busy === "checkin"} />
+          </View>
+        ) : null}
+
+        <View style={{ flexDirection: "row", gap: 8, marginBottom: 8 }}>
+          <View style={{ flex: 1 }}><Btn title="+ Before photo" kind="outline" onPress={() => addPhoto("before")} loading={busy === "photo"} /></View>
+          <View style={{ flex: 1 }}><Btn title="+ After photo" kind="outline" onPress={() => addPhoto("after")} loading={busy === "photo"} /></View>
+        </View>
+
+        {job.status !== "done" && job.status !== "paid" ? (
+          <View style={{ marginBottom: 8 }}>
+            <Btn title="Complete job" kind="primary" onPress={async () => { await supabase.from("jobs").update({ status: "done" }).eq("id", id); load(); }} />
+          </View>
+        ) : null}
 
         {wa ? <Btn title="WhatsApp client" kind="outline" onPress={() => Linking.openURL(wa)} /> : <Muted>No client phone on file.</Muted>}
       </ScrollView>

@@ -22,7 +22,10 @@ export default function Jobs() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={["top"]}>
-      <View style={st.head}><H1>Jobs</H1></View>
+      <View style={[st.head, { flexDirection: "row", justifyContent: "space-between", alignItems: "center" }]}>
+        <H1>Jobs</H1>
+        <Link href="/jobs/new" style={{ color: c.primary, fontWeight: "700", fontSize: 15 }}>+ New</Link>
+      </View>
       <FlatList
         data={jobs}
         keyExtractor={(j) => j.id}

@@ -32,12 +32,17 @@
       "expo-router",
       [
         "expo-location",
-        { "locationWhenInUsePermission": "Medja records your GPS check-in when you arrive at a cleaning job." }
+        {
+          "locationWhenInUsePermission": "Medja records your GPS check-in when you arrive at a cleaning job."
+        }
       ],
       [
         "expo-image-picker",
-        { "photosPermission": "Medja uses your photos to attach before/after job pictures and staff documents." }
-      ]
+        {
+          "photosPermission": "Medja uses your photos to attach before/after job pictures and staff documents."
+        }
+      ],
+      "@react-native-community/datetimepicker"
     ]
   }
 }

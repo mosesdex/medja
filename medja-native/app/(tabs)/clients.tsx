@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "@/lib/supabase";
 import { c } from "@/lib/theme";
@@ -18,7 +18,10 @@ export default function Clients() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={["top"]}>
-      <View style={st.head}><H1>Clients</H1></View>
+      <View style={[st.head, { flexDirection: "row", justifyContent: "space-between", alignItems: "center" }]}>
+        <H1>Clients</H1>
+        <Link href="/clients/new" style={{ color: c.primary, fontWeight: "700", fontSize: 15 }}>+ New</Link>
+      </View>
       <FlatList
         data={clients}
         keyExtractor={(c) => c.id}

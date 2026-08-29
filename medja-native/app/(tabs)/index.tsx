@@ -49,7 +49,10 @@ export default function Dashboard() {
             <H1>Hi {member?.name}</H1>
             <Muted>{today}</Muted>
           </View>
-          <Text onPress={signOut} style={{ color: c.muted, fontSize: 13 }}>Sign out</Text>
+          <View style={{ alignItems: "flex-end", gap: 6 }}>
+            <Link href="/jobs/new" style={{ color: c.primary, fontWeight: "700", fontSize: 15 }}>+ New job</Link>
+            <Text onPress={signOut} style={{ color: c.muted, fontSize: 12 }}>Sign out</Text>
+          </View>
         </View>
 
         <View style={st.tiles}>
