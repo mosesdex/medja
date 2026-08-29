@@ -28,13 +28,15 @@ export default function Clients() {
         contentContainerStyle={{ padding: 16, paddingTop: 0 }}
         ListEmptyComponent={<Card><Muted>No clients yet.</Muted></Card>}
         renderItem={({ item }) => (
-          <Card style={{ marginBottom: 8, flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <View style={{ flex: 1 }}>
-              <Text style={st.name}>{item.name}</Text>
-              <Muted>{item.phone ?? "—"}</Muted>
-            </View>
-            <Badge value={item.kind} />
-          </Card>
+          <Link href={`/clients/${item.id}`} asChild>
+            <Card style={{ marginBottom: 8, flexDirection: "row", alignItems: "center", gap: 10 }}>
+              <View style={{ flex: 1 }}>
+                <Text style={st.name}>{item.name}</Text>
+                <Muted>{item.phone ?? "—"}</Muted>
+              </View>
+              <Badge value={item.kind} />
+            </Card>
+          </Link>
         )}
       />
     </SafeAreaView>

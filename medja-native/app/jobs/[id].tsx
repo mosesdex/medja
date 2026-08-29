@@ -137,6 +137,8 @@ export default function JobDetail() {
         ) : null}
 
         {wa ? <Btn title="WhatsApp client" kind="outline" onPress={() => Linking.openURL(wa)} /> : <Muted>No client phone on file.</Muted>}
+        <View style={{ height: 8 }} />
+        <Btn title="Create invoice" kind="primary" onPress={() => router.push(`/invoices/new?job=${id}`)} />
       </ScrollView>
     </SafeAreaView>
   );

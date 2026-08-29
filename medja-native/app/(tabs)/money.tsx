@@ -26,7 +26,10 @@ export default function MoneyTab() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={["top"]}>
-      <View style={st.head}><H1>Money</H1></View>
+      <View style={[st.head, { flexDirection: "row", justifyContent: "space-between", alignItems: "center" }]}>
+        <H1>Money</H1>
+        <Link href="/invoices/new" style={{ color: c.primary, fontWeight: "700", fontSize: 15 }}>+ New</Link>
+      </View>
       <FlatList
         data={invoices}
         keyExtractor={(i) => i.id}
