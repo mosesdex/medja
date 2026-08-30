@@ -40,7 +40,10 @@ export default function MoneyTab() {
               <StatTile label="Collected" value={formatNaira(collected)} tone="green" />
               <StatTile label="Outstanding" value={formatNaira(outstanding)} tone="amber" />
             </View>
-            <Link href="/receivables" style={{ color: c.primary, fontWeight: "700", marginBottom: 12 }}>Receivables & aging →</Link>
+            <View style={{ flexDirection: "row", gap: 16, marginBottom: 12 }}>
+              <Link href="/receivables" style={{ color: c.primary, fontWeight: "700" }}>Receivables →</Link>
+              <Link href="/quotes" style={{ color: c.primary, fontWeight: "700" }}>Quotes →</Link>
+            </View>
           </View>
         }
         ListEmptyComponent={<Card><Muted>No invoices yet.</Muted></Card>}
