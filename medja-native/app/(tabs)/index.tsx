@@ -51,6 +51,7 @@ export default function Dashboard() {
           </View>
           <View style={{ alignItems: "flex-end", gap: 6 }}>
             <Link href="/jobs/new" style={{ color: c.primary, fontWeight: "700", fontSize: 15 }}>+ New job</Link>
+            <Link href="/reports" style={{ color: c.primary, fontWeight: "600", fontSize: 13 }}>Reports</Link>
             <Text onPress={signOut} style={{ color: c.muted, fontSize: 12 }}>Sign out</Text>
           </View>
         </View>
