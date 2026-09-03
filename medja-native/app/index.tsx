@@ -14,5 +14,6 @@ export default function Index() {
   }
   if (!session) return <Redirect href="/login" />;
   if (!member) return <Redirect href="/onboarding" />;
+  if (member.role === "cleaner") return <Redirect href="/cleaner" />;
   return <Redirect href="/(tabs)" />;
 }
